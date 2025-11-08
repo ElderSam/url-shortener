@@ -33,14 +33,13 @@ $ pnpm run test:e2e
 # test coverage
 $ pnpm run test:cov
 ```
-
 ## Prettier & ESLint
-Explicação dos scripts:
+Explanation of the scripts:
 
-``format:check``: verifica formatação sem modificar arquivos
-``lint:check``: verifica lint sem correções automáticas e falha se houver warnings
-``code:check``: roda ambas as verificações (útil para CI)
-``code:fix``: formata e corrige problemas automaticamente
+``format:check``: checks formatting without modifying files  
+``lint:check``: checks lint without automatic fixes and fails if there are warnings  
+``code:check``: runs both checks (useful for CI)  
+``code:fix``: formats and automatically fixes issues  
 
 
 ## Deployment

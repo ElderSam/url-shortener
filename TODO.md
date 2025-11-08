@@ -6,15 +6,15 @@
 - [x] Criar repositório no GitHub (`url-shortener`)
 - [x] Inicializar projeto NestJS (`nest new url-shortener`)
 - [x] Configurar ESLint + Prettier
-- [ ] Criar `docker-compose.yml` com:
-  - [ ] Serviço do app (Node + NestJS)
-  - [ ] Serviço do banco (PostgreSQL)
+- [x] Criar `docker-compose.yml` com:
+  - [x] Serviço do app (Node + NestJS)
+  - [x] Serviço do banco (PostgreSQL)
 - [ ] Criar `.env` com variáveis:
   - [ ] `DATABASE_URL`
   - [ ] `JWT_SECRET`
   - [ ] `BASE_URL`
-- [ ] Configurar TypeORM ou Prisma
-- [ ] Testar conexão com o banco e `docker-compose up`
+- [ ] Configurar TypeORM ou Prisma (ferramentas opcionais)
+- [x] Testar conexão com o banco e `docker-compose up`
 
 ---
 
@@ -88,7 +88,7 @@
 
 - [ ] Gerar documentação Swagger (`/docs`)
 - [ ] Criar **README.md** com:
-  - [ ] Passos para executar com Docker
+  - [x] Passos para executar com Docker
   - [ ] Descrição dos endpoints
   - [ ] Instruções para rodar testes
   - [ ] Explicação sobre escalabilidade (horizontal/vertical)

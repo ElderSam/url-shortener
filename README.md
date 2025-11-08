@@ -33,6 +33,7 @@ $ pnpm run test:e2e
 # test coverage
 $ pnpm run test:cov
 ```
+
 ## Prettier & ESLint
 Explanation of the scripts:
 
@@ -41,10 +42,17 @@ Explanation of the scripts:
 ``code:check``: runs both checks (useful for CI)  
 ``code:fix``: formats and automatically fixes issues  
 
-## Docker`
-build and run docker image
-`docker-compose build --no-cache`
-`docker-compose up`
+
+## Docker
+### Stop running containers
+`docker-compose down`
+
+### Rebuild and start
+`docker-compose up --build`
+
+### (optional) In another terminal, test the connection to the database
+`docker-compose exec db psql -U user -d urlshortener`
+
 
 ## Deployment
 

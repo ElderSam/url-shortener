@@ -53,6 +53,9 @@ Explanation of the scripts:
 ### (optional) In another terminal, test the connection to the database
 `docker-compose exec db psql -U user -d urlshortener`
 
+## Prisma
+create prisma files: 
+`pnpm prisma init`
 
 ## Deployment
 

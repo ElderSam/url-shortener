@@ -41,6 +41,10 @@ Explanation of the scripts:
 ``code:check``: runs both checks (useful for CI)  
 ``code:fix``: formats and automatically fixes issues  
 
+## Docker`
+build and run docker image
+`docker-compose build --no-cache`
+`docker-compose up`
 
 ## Deployment
 

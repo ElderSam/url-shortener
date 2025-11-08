@@ -5,7 +5,7 @@
 
 - [x] Criar repositório no GitHub (`url-shortener`)
 - [x] Inicializar projeto NestJS (`nest new url-shortener`)
-- [ ] Configurar ESLint + Prettier
+- [x] Configurar ESLint + Prettier
 - [ ] Criar `docker-compose.yml` com:
   - [ ] Serviço do app (Node + NestJS)
   - [ ] Serviço do banco (PostgreSQL)
@@ -78,7 +78,7 @@
   - [ ] `AuthService`
   - [ ] `ShortenService`
   - [ ] `RedirectController`
-- [ ] Rodar ESLint e Prettier (automatizar via script)
+- [x] Rodar ESLint e Prettier (automatizar via script)
 - [ ] Adicionar script `npm run test:watch`
 
 ---

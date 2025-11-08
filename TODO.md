@@ -9,11 +9,11 @@
 - [x] Criar `docker-compose.yml` com:
   - [x] Serviço do app (Node + NestJS)
   - [x] Serviço do banco (PostgreSQL)
-- [ ] Criar `.env` com variáveis:
-  - [ ] `DATABASE_URL`
+- [x] Criar `.env` com variáveis:
+  - [x] `DATABASE_URL`
   - [ ] `JWT_SECRET`
-  - [ ] `BASE_URL`
-- [ ] Configurar TypeORM ou Prisma (ferramentas opcionais)
+  - [x] `BASE_URL`
+- [x] Configurar Prisma
 - [x] Testar conexão com o banco e `docker-compose up`
 
 ---

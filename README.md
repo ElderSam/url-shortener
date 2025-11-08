@@ -54,8 +54,14 @@ Explanation of the scripts:
 `docker-compose exec db psql -U user -d urlshortener`
 
 ## Prisma
-create prisma files: 
+### create prisma files: 
 `pnpm prisma init`
+
+### Generate Prisma client
+`pnpm prisma generate`
+
+### Create first migration
+`pnpm prisma migrate dev --name init`
 
 ## Deployment
 

@@ -4,8 +4,28 @@ A url shortener made with NestJS.
 
 ## Project setup
 
+### 1. Environment Variables
+Copy the `.env.example` file to `.env`:
+```bash
+$ cp .env.example .env
+```
+
+Update the values in `.env`. 
+
+### 2. Install Dependencies
 ```bash
 $ pnpm install
+```
+
+### 3. Start Docker Services
+The database and user will be created automatically:
+```bash
+$ docker-compose up -d
+```
+
+### 4. Run Prisma Migrations
+```bash
+$ pnpm prisma migrate dev
 ```
 
 ## Compile and run the project
@@ -48,7 +68,7 @@ Explanation of the scripts:
 `docker-compose down`
 
 ### Rebuild and start
-`docker-compose up --build`
+`docker-compose up --build` or `docker compose restart`
 
 ### (optional) In another terminal, test the connection to the database
 `docker-compose exec db psql -U user -d url_shortener`

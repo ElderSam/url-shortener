@@ -51,7 +51,7 @@ Explanation of the scripts:
 `docker-compose up --build`
 
 ### (optional) In another terminal, test the connection to the database
-`docker-compose exec db psql -U user -d urlshortener`
+`docker-compose exec db psql -U user -d url_shortener`
 
 ## Prisma
 ### create prisma files: 

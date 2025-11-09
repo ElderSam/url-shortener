@@ -5,11 +5,34 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-arm64-openssl-3.0.x"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// Modelos que você mencionou anteriormente
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ShortUrl  ShortUrl[]
+}
+
+model ShortUrl {
+  id          String   @id @default(uuid())
+  originalUrl String
+  slug        String   @unique
+  alias       String?  @unique
+  ownerId     String?
+  owner       User?    @relation(fields: [ownerId], references: [id])
+  accessCount Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
 }

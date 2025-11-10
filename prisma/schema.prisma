@@ -21,18 +21,6 @@ model User {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  ShortUrl  ShortUrl[]
+  deletedAt DateTime?
 }
 
-model ShortUrl {
-  id          String   @id @default(uuid())
-  originalUrl String
-  slug        String   @unique
-  alias       String?  @unique
-  ownerId     String?
-  owner       User?    @relation(fields: [ownerId], references: [id])
-  accessCount Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  deletedAt   DateTime?
-}

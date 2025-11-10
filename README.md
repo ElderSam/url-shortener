@@ -28,7 +28,7 @@ $ docker-compose up -d
 $ pnpm prisma migrate dev
 ```
 
-## Compile and run the project
+## Compile and run the project (if you are not using Docker)
 
 ```bash
 # development
@@ -40,6 +40,39 @@ $ pnpm run start:dev
 # production mode
 $ pnpm run start:prod
 ```
+
+## API Documentation (Swagger / OpenAPI)
+This project uses Swagger (OpenAPI) for automatic API documentation.
+
+### How to access
+- Start the application (see above)
+- Open your browser and go to: [http://localhost:3000/api](http://localhost:3000/api)
+
+You will see an interactive UI to explore and test all API endpoints.
+
+### How it works
+- All controllers and routes are automatically documented.
+- DTOs (request/response objects) are described if you use NestJS and Swagger decorators.
+- The documentation updates automatically when you add new routes/controllers.
+
+### Customizing documentation
+- Use decorators like `@ApiTags`, `@ApiProperty`, `@ApiResponse` in your controllers and DTOs for richer docs.
+- See the [NestJS Swagger docs](https://docs.nestjs.com/openapi/introduction) for advanced usage.
+
+### Example
+```typescript
+@ApiTags('auth')
+@Controller('auth')
+export class AuthController {
+	@ApiOperation({ summary: 'Login user' })
+	@Post('login')
+	login(@Body() loginDto: LoginDto) {
+		// ...
+	}
+}
+```
+
+This will show up in Swagger UI under the "auth" tag.
 
 ## Run tests
 
@@ -54,24 +87,7 @@ $ pnpm run test:e2e
 $ pnpm run test:cov
 ```
 
-## Prettier & ESLint
-Explanation of the scripts:
 
-``format:check``: checks formatting without modifying files  
-``lint:check``: checks lint without automatic fixes and fails if there are warnings  
-``code:check``: runs both checks (useful for CI)  
-``code:fix``: formats and automatically fixes issues  
-
-
-## Docker
-### Stop running containers
-`docker-compose down`
-
-### Rebuild and start
-`docker-compose up --build` or `docker compose restart`
-
-### (optional) In another terminal, test the connection to the database
-`docker-compose exec db psql -U user -d url_shortener`
 
 ## Prisma
 ### create prisma files: 
@@ -82,6 +98,15 @@ Explanation of the scripts:
 
 ### Create first migration
 `pnpm prisma migrate dev --name init`
+
+
+## Prettier & ESLint
+Explanation of the scripts:
+
+``format:check``: checks formatting without modifying files  
+``lint:check``: checks lint without automatic fixes and fails if there are warnings  
+``code:check``: runs both checks (useful for CI)  
+``code:fix``: formats and automatically fixes issues  
 
 ## Deployment
 

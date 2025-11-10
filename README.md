@@ -97,14 +97,16 @@ $ pnpm run test:cov
 
 
 ## Prisma
-### create prisma files: 
-`pnpm prisma init`
 
-### Generate Prisma client
-`pnpm prisma generate`
+## Prisma
+If you just want to test the project, you only need to run:
 
-### Create first migration
-`pnpm prisma migrate dev --name init`
+```bash
+pnpm prisma generate
+pnpm prisma migrate dev
+```
+
+This will create the database and generate the Prisma client automatically. You do not need to change the schema or run any other commands unless you want to modify the data model.
 
 
 ## Prettier & ESLint

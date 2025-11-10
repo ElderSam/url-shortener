@@ -12,42 +12,51 @@ $ cp .env.example .env
 
 Update the values in `.env`. 
 
-### 2. Install Dependencies
-```bash
-$ pnpm install
-```
 
-### 3. Start Docker Services
-The database and user will be created automatically:
-```bash
-$ docker-compose up -d
-```
+### 2. Running the Project
 
-#### Logs
-##### App logs
-`$ docker-compose logs app --follow`
+#### Option 1: Using Docker (recommended)
+1. Start database and app containers:
+	```bash
+	docker-compose up -d
+	```
+2. Run Prisma migrations and generate client inside the app container:
+	```bash
+	docker-compose exec app pnpm prisma migrate dev
+	docker-compose exec app pnpm prisma generate
+	```
+3. Access the app at [http://localhost:3000](http://localhost:3000) and Swagger docs at `/api`.
+4. (Optional) View logs after containers are running:
+	 - App logs:
+		 ```bash
+		 docker-compose logs app --follow
+		 ```
+	 - DB logs:
+		 ```bash
+		 docker-compose logs db --follow
+		 ```
 
-##### Db logs
-`$ docker-compose logs db --follow`
-
-
-### 4. Run Prisma Migrations
-```bash
-$ pnpm prisma migrate dev
-```
-
-## Compile and run the project (if you are not using Docker)
-
-```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
-```
+#### Option 2: Without Docker
+1. Make sure you have a local PostgreSQL (or compatible) database running and configured in `.env`.
+2. Install dependencies:
+	```bash
+	pnpm install
+	```
+3. Run Prisma migrations and generate client:
+	```bash
+	pnpm prisma migrate dev
+	pnpm prisma generate
+	```
+4. Start the app:
+	```bash
+	# development
+	pnpm run start
+	# watch mode
+	pnpm run start:dev
+	# production mode
+	pnpm run start:prod
+	```
+5. Access the app at [http://localhost:3000](http://localhost:3000) and Swagger docs at `/api`.
 
 ## API Documentation (Swagger / OpenAPI)
 This project uses Swagger (OpenAPI) for automatic API documentation.
@@ -85,17 +94,6 @@ $ pnpm run test:e2e
 # test coverage
 $ pnpm run test:cov
 ```
-
-
-## Prisma
-If you just want to test the project, you only need to run:
-
-```bash
-pnpm prisma generate
-pnpm prisma migrate dev
-```
-
-This will create the database and generate the Prisma client automatically. You do not need to change the schema or run any other commands unless you want to modify the data model.
 
 
 ## Prettier & ESLint

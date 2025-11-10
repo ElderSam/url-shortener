@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 import * as swaggerDocument from '../swagger.json';
 
 async function bootstrap() {
@@ -13,6 +14,9 @@ async function bootstrap() {
 
   // Global response interceptor
   app.useGlobalInterceptors(new ResponseInterceptor());
+
+  // Global exception filter
+  app.useGlobalFilters(new GlobalExceptionFilter());
 
   SwaggerModule.setup('api', app, swaggerDocument);
 

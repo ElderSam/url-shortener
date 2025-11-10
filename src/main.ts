@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import * as swaggerDocument from '../swagger.json';
 
 async function bootstrap() {
@@ -9,6 +10,9 @@ async function bootstrap() {
 
   // Enable global validation for DTOs
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+
+  // Global response interceptor
+  app.useGlobalInterceptors(new ResponseInterceptor());
 
   SwaggerModule.setup('api', app, swaggerDocument);
 

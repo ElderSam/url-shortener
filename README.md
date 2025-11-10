@@ -23,6 +23,14 @@ The database and user will be created automatically:
 $ docker-compose up -d
 ```
 
+#### Logs
+##### App logs
+`$ docker-compose logs app --follow`
+
+##### Db logs
+`$ docker-compose logs db --follow`
+
+
 ### 4. Run Prisma Migrations
 ```bash
 $ pnpm prisma migrate dev

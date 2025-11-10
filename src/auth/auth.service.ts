@@ -14,8 +14,16 @@ export class AuthService {
     if (!email || typeof email !== 'string' || !email.trim()) {
       throw new BadRequestException('Email é obrigatório');
     }
+    // Regex simples para validar formato de email
+    const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+    if (!emailRegex.test(email)) {
+      throw new BadRequestException('Email inválido');
+    }
     if (!password || typeof password !== 'string' || !password.trim()) {
       throw new BadRequestException('Senha é obrigatória');
+    }
+    if (password.length < 6) {
+      throw new BadRequestException('A senha deve ter pelo menos 6 caracteres');
     }
 
     // Verifica se o email já está cadastrado

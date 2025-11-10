@@ -65,21 +65,13 @@ You will see an interactive UI to explore and test all API endpoints.
 
 ### Customizing documentation
 
-#### Centralized Swagger Documentation
+#### Swagger Documentation
 
-All API documentation is kept in a single `swagger.json` file at the project root.
+All API documentation is in the `swagger.json` file at the project root.
+Update `swagger.json` whenever you add or change a route.
 
-- Do not use Swagger decorators in controllers or DTOs.
-- Whenever you create or change a route, update `swagger.json`.
-
-#### Simple workflow
-1. Create or update a route.
-2. Update `swagger.json` with the new route and examples.
-3. Check the documentation at `/api`.
-
-For official integration details, see:
-- NestJS Swagger docs: https://docs.nestjs.com/openapi/introduction
-- Swagger/OpenAPI Specification: https://swagger.io/specification/
+Official docs:
+- https://docs.nestjs.com/openapi/introduction
 
 ## Run tests
 
@@ -94,9 +86,6 @@ $ pnpm run test:e2e
 $ pnpm run test:cov
 ```
 
-
-
-## Prisma
 
 ## Prisma
 If you just want to test the project, you only need to run:

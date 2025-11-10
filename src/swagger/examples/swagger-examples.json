@@ -1,0 +1,26 @@
+{
+  "auth": {
+    "register": {
+      "request": {
+        "default": {
+          "summary": "Valid request",
+          "value": { "email": "user@email.com", "password": "password123" }
+        }
+      },
+      "responses": {
+        "success": {
+          "summary": "User registered successfully",
+          "value": { "message": "Registro realizado", "user": { "id": "uuid", "email": "user@email.com" } }
+        },
+        "validationError": {
+          "summary": "Validation error",
+          "value": { "statusCode": 400, "message": "Email é obrigatório", "error": "Bad Request" }
+        },
+        "conflictError": {
+          "summary": "Email already registered",
+          "value": { "statusCode": 409, "message": "Email já cadastrado", "error": "Conflict" }
+        }
+      }
+    }
+  }
+}

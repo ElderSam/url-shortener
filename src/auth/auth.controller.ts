@@ -2,6 +2,7 @@ import { Controller, Post, Body } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
+import SwaggerExamples from '../swagger/examples/swagger-examples.json';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -10,21 +11,10 @@ export class AuthController {
 
   @Post('register')
   @ApiOperation({ summary: 'Register a new user' })
-  @ApiBody({ type: RegisterDto, examples: {
-    default: {
-      summary: 'Example',
-      value: { email: 'user@email.com', password: 'password123' }
-    }
-  }})
-  @ApiResponse({ status: 201, description: 'User registered successfully', schema: {
-    example: { message: 'Registro realizado', user: { id: 'uuid', email: 'user@email.com' } }
-  }})
-  @ApiResponse({ status: 400, description: 'Validation error', schema: {
-    example: { statusCode: 400, message: 'Email é obrigatório', error: 'Bad Request' }
-  }})
-  @ApiResponse({ status: 409, description: 'Email already registered', schema: {
-    example: { statusCode: 409, message: 'Email já cadastrado', error: 'Conflict' }
-  }})
+  @ApiBody({ type: RegisterDto, examples: SwaggerExamples.auth.register.request })
+  @ApiResponse({ status: 201, description: 'User registered successfully', content: { 'application/json': { examples: { success: SwaggerExamples.auth.register.responses.success } } } })
+  @ApiResponse({ status: 400, description: 'Validation error', content: { 'application/json': { examples: { validationError: SwaggerExamples.auth.register.responses.validationError } } } })
+  @ApiResponse({ status: 409, description: 'Email already registered', content: { 'application/json': { examples: { conflictError: SwaggerExamples.auth.register.responses.conflictError } } } })
   async register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
   }

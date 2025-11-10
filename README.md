@@ -64,23 +64,22 @@ You will see an interactive UI to explore and test all API endpoints.
 - The documentation updates automatically when you add new routes/controllers.
 
 ### Customizing documentation
-- Use decorators like `@ApiTags`, `@ApiProperty`, `@ApiResponse` in your controllers and DTOs for richer docs.
-- See the [NestJS Swagger docs](https://docs.nestjs.com/openapi/introduction) for advanced usage.
 
-### Example
-```typescript
-@ApiTags('auth')
-@Controller('auth')
-export class AuthController {
-	@ApiOperation({ summary: 'Login user' })
-	@Post('login')
-	login(@Body() loginDto: LoginDto) {
-		// ...
-	}
-}
-```
+#### Centralized Swagger Documentation
 
-This will show up in Swagger UI under the "auth" tag.
+All API documentation is kept in a single `swagger.json` file at the project root.
+
+- Do not use Swagger decorators in controllers or DTOs.
+- Whenever you create or change a route, update `swagger.json`.
+
+#### Simple workflow
+1. Create or update a route.
+2. Update `swagger.json` with the new route and examples.
+3. Check the documentation at `/api`.
+
+For official integration details, see:
+- NestJS Swagger docs: https://docs.nestjs.com/openapi/introduction
+- Swagger/OpenAPI Specification: https://swagger.io/specification/
 
 ## Run tests
 

@@ -1,0 +1,91 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "URL Shortener API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Register a new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              },
+              "examples": {
+                "default": {
+                  "summary": "Valid request",
+                  "value": { "email": "user@email.com", "password": "password123" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User registered successfully",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "success": {
+                    "summary": "User registered successfully",
+                    "value": { "message": "Registro realizado", "user": { "id": "uuid", "email": "user@email.com" } }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "validationError": {
+                    "summary": "Validation error",
+                    "value": { "statusCode": 400, "message": "Email é obrigatório", "error": "Bad Request" }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Email already registered",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "conflictError": {
+                    "summary": "Email already registered",
+                    "value": { "statusCode": 409, "message": "Email já cadastrado", "error": "Conflict" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RegisterDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user@email.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123",
+            "minLength": 6
+          }
+        },
+        "required": ["email", "password"]
+      }
+    }
+  }
+}

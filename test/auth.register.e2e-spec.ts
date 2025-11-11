@@ -4,7 +4,7 @@ import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
 
-describe('AuthController (e2e)', () => {
+describe('AuthController (register e2e)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
@@ -64,6 +64,6 @@ describe('AuthController (e2e)', () => {
     const res = await request(app.getHttpServer())
       .post('/auth/register')
       .send({ email: 'already@email.com', password: '123456' });
-    expect(res.status).toBe(400); // BadRequestException (could be 409 if custom exception is used)
+  expect(res.status).toBe(409); // Agora espera ConflictException
   });
 });

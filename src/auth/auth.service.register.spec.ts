@@ -4,7 +4,7 @@ import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
 import { BadRequestException } from '@nestjs/common';
 
-describe('AuthService', () => {
+describe('AuthService - register', () => {
   let authService: AuthService;
   let usersService: UsersService;
 

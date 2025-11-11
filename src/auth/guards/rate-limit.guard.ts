@@ -2,7 +2,7 @@ import { Injectable, CanActivate, ExecutionContext, BadRequestException } from '
 
 const ATTEMPT_LIMIT = 3;
 const WINDOW_MS = 60 * 1000; // 1 minute
-const attempts: Record<string, { count: number; timestamp: number }> = {};
+export const attempts: Record<string, { count: number; timestamp: number }> = {};
 
 @Injectable()
 export class RateLimitGuard implements CanActivate {

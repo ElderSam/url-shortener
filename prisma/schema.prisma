@@ -1,3 +1,12 @@
+model User {
+  id        String     @id @default(uuid())
+  email     String     @unique
+  password  String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  deletedAt DateTime?
+  urls      ShortUrl[] @relation("UserShortUrls")
+}
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
@@ -15,12 +24,17 @@ datasource db {
 }
 
 // Modelos que você mencionou anteriormente
-model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deletedAt DateTime?
+
+model ShortUrl {
+  id          String   @id @default(uuid())
+  originalUrl String
+  slug        String   @unique
+  alias       String?  @unique
+  ownerId     String?
+  owner       User?    @relation("UserShortUrls", fields: [ownerId], references: [id])
+  accessCount Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
 }
 

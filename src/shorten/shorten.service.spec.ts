@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, ForbiddenException } from '@nestjs/common';
 import { ShortenService } from './shorten.service';
 import { SlugService } from './slug.service';
 import { PrismaService } from '../prisma/prisma.service';
@@ -378,6 +378,123 @@ describe('ShortenService', () => {
           }
         })
       );
+    });
+  });
+
+  describe('updateUserUrl', () => {
+    it('should successfully update the originalUrl for owned URL', async () => {
+      const mockShortUrl = {
+        id: 'url-id-1',
+        ownerId: 'user-123',
+        originalUrl: 'https://old-url.com',
+        slug: 'abc123',
+        alias: null,
+        deletedAt: null,
+        accessCount: 5,
+        createdAt: new Date('2025-01-01'),
+        updatedAt: new Date('2025-01-01'),
+      };
+
+      const mockUpdated = {
+        id: 'url-id-1',
+        originalUrl: 'https://new-url.com',
+        slug: 'abc123',
+        alias: null,
+        accessCount: 5,
+        createdAt: new Date('2025-01-01'),
+        updatedAt: new Date('2025-01-10'),
+      };
+
+      mockPrisma.shortUrl.findUnique.mockResolvedValue(mockShortUrl);
+      mockPrisma.shortUrl.update.mockResolvedValue(mockUpdated);
+
+      const result = await service.updateUserUrl('url-id-1', 'user-123', 'https://new-url.com');
+
+      expect(result).toEqual({
+        ...mockUpdated,
+        shortUrl: 'http://localhost:3000/abc123'
+      });
+      expect(mockPrisma.shortUrl.findUnique).toHaveBeenCalledWith({
+        where: { id: 'url-id-1' }
+      });
+      expect(mockPrisma.shortUrl.update).toHaveBeenCalledWith({
+        where: { id: 'url-id-1' },
+        data: { originalUrl: 'https://new-url.com' },
+        select: expect.any(Object)
+      });
+    });
+
+    it('should throw NotFoundException if URL does not exist', async () => {
+      mockPrisma.shortUrl.findUnique.mockResolvedValue(null);
+
+      await expect(
+        service.updateUserUrl('non-existent-id', 'user-123', 'https://new-url.com')
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('should throw NotFoundException if URL is soft deleted', async () => {
+      const mockDeletedUrl = {
+        id: 'url-id-1',
+        ownerId: 'user-123',
+        deletedAt: new Date('2025-01-05'),
+        originalUrl: 'https://old-url.com',
+        slug: 'abc123',
+        alias: null
+      };
+
+      mockPrisma.shortUrl.findUnique.mockResolvedValue(mockDeletedUrl);
+
+      await expect(
+        service.updateUserUrl('url-id-1', 'user-123', 'https://new-url.com')
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('should throw ForbiddenException if user does not own the URL', async () => {
+      const mockShortUrl = {
+        id: 'url-id-1',
+        ownerId: 'other-user',
+        originalUrl: 'https://old-url.com',
+        slug: 'abc123',
+        alias: null,
+        deletedAt: null
+      };
+
+      mockPrisma.shortUrl.findUnique.mockResolvedValue(mockShortUrl);
+
+      await expect(
+        service.updateUserUrl('url-id-1', 'user-123', 'https://new-url.com')
+      ).rejects.toThrow(ForbiddenException);
+    });
+
+    it('should work with aliased URLs', async () => {
+      const mockShortUrl = {
+        id: 'url-id-1',
+        ownerId: 'user-123',
+        originalUrl: 'https://old-url.com',
+        slug: 'abc123',
+        alias: 'myalias',
+        deletedAt: null,
+        accessCount: 10,
+        createdAt: new Date('2025-01-01'),
+        updatedAt: new Date('2025-01-01'),
+      };
+
+      const mockUpdated = {
+        id: 'url-id-1',
+        originalUrl: 'https://new-url.com',
+        slug: 'abc123',
+        alias: 'myalias',
+        accessCount: 10,
+        createdAt: new Date('2025-01-01'),
+        updatedAt: new Date('2025-01-10'),
+      };
+
+      mockPrisma.shortUrl.findUnique.mockResolvedValue(mockShortUrl);
+      mockPrisma.shortUrl.update.mockResolvedValue(mockUpdated);
+
+      const result = await service.updateUserUrl('url-id-1', 'user-123', 'https://new-url.com');
+
+      expect(result.shortUrl).toBe('http://localhost:3000/myalias');
     });
   });
 });

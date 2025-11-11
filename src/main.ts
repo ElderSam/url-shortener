@@ -8,6 +8,11 @@ import * as swaggerDocument from '../swagger.json';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  // Register global middleware for optional authentication
+  // Static import of the middleware
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { OptionalAuthMiddleware } = require('./common/middleware/optional-auth.middleware');
+  app.use(new OptionalAuthMiddleware().use);
 
   // Enable global validation for DTOs
   app.useGlobalPipes(new ValidationPipe({

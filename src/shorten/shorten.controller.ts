@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Put, Delete, Param, Body, UseGuards, ValidationPipe, UsePipes } from '@nestjs/common';
+import { Controller, Post, Get, Put, Delete, Param, Body, UseGuards, Req } from '@nestjs/common';
 import { ShortenUrlDto } from './dto/shorten-url.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
 
@@ -6,9 +6,18 @@ import { AuthGuard } from '../auth/guards/auth.guard';
 export class ShortenController {
 	// Public: Shorten URL (anonymous or authenticated)
 	@Post('shorten')
-	async shortenUrl(@Body(ValidationPipe) dto: ShortenUrlDto) {
-		// TODO: Implement shortening
-		return dto;
+	async shortenUrl(@Body() dto: ShortenUrlDto, @Req() request) {
+			// Check if user is authenticated
+			if (request.user) {
+				// Authenticated user: associate shortened URL with user
+				// TODO: Implement logic for authenticated user
+				return { ...dto, ownerId: request.user.sub };
+			}
+			else {
+				// Anonymous user: create shortened URL without owner
+				// TODO: Implement logic for anonymous user
+				return { ...dto, ownerId: null };
+			}
 	}
 
 	// Public: Redirect and count access

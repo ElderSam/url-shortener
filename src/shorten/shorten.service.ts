@@ -147,4 +147,25 @@ export class ShortenService {
       shortUrl: `${baseUrl}/${updated.alias ?? updated.slug}`
     };
   }
+
+  async softDeleteUserUrl(id: string, userId: string): Promise<void> {
+    // Find the URL and verify ownership
+    const shortUrl = await this.prisma.shortUrl.findUnique({
+      where: { id }
+    });
+
+    if (!shortUrl || shortUrl.deletedAt !== null) {
+      throw new NotFoundException('Short URL not found');
+    }
+
+    if (shortUrl.ownerId !== userId) {
+      throw new ForbiddenException('You do not have permission to delete this URL');
+    }
+
+    // Soft delete by setting deletedAt timestamp
+    await this.prisma.shortUrl.update({
+      where: { id },
+      data: { deletedAt: new Date() }
+    });
+  }
 }

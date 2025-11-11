@@ -52,9 +52,10 @@ export class ShortenController {
 	// Protected: Soft delete URL
 	@Delete('my-urls/:id')
 	@UseGuards(AuthGuard)
-	async deleteUrl(@Param('id') id: string) {
-		// TODO: Implement soft delete
-		return `deleteUrl ${id}`;
+	async deleteUrl(@Param('id') id: string, @Req() request, @Res() res: Response) {
+		const userId = request.user.sub;
+		await this.shortenService.softDeleteUserUrl(id, userId);
+		return res.status(204).send();
 	}
 
 	// Public: Redirect and count access (MUST come after /my-urls to avoid catching it)

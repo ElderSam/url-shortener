@@ -1,6 +1,8 @@
 import request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { ResponseInterceptor } from '../src/common/interceptors/response.interceptor';
+import { GlobalExceptionFilter } from '../src/common/filters/global-exception.filter';
 import { AppModule } from '../src/app.module';
 
 describe('POST /shorten (e2e)', () => {
@@ -10,28 +12,26 @@ describe('POST /shorten (e2e)', () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
+
     app = moduleFixture.createNestApplication();
-    // Add global pipes and interceptors as in main.ts
-    const { ValidationPipe } = require('@nestjs/common');
-    const { ResponseInterceptor } = require('../src/common/interceptors/response.interceptor');
-    const { GlobalExceptionFilter } = require('../src/common/filters/global-exception.filter');
+
     app.useGlobalPipes(new ValidationPipe({
       transform: true,
       whitelist: true,
     }));
+
     app.useGlobalInterceptors(new ResponseInterceptor());
     app.useGlobalFilters(new GlobalExceptionFilter());
     await app.init();
   });
 
   beforeEach(async () => {
-    // Clean up ShortUrl table before each test
-    const { PrismaService } = require('../src/prisma/prisma.service');
-    const prisma = app.get(PrismaService);
-    await prisma.prismaClient.shortUrl.deleteMany();
+  // Clean up all tables before each test
+  const { truncateAllTables } = require('./utils/db-reset');
+  await truncateAllTables();
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     await app.close();
   });
 
@@ -39,9 +39,11 @@ describe('POST /shorten (e2e)', () => {
     const res = await request(app.getHttpServer())
       .post('/shorten')
       .send({ originalUrl: 'http://example.com' });
+
+
     expect(res.status).toBe(201);
-    expect(res.body.short).toMatch(/^[A-Za-z0-9]{6}$/);
-    expect(res.body.originalUrl).toBe('http://example.com');
+    expect(res.body.data.short).toMatch(/^[A-Za-z0-9]{6}$/);
+    expect(res.body.data.originalUrl).toBe('http://example.com');
   });
 
   it('should fail with invalid url', async () => {
@@ -53,8 +55,9 @@ describe('POST /shorten (e2e)', () => {
 
   it('should create a short url with alias (authenticated)', async () => {
     // First, register and login to get JWT
-    const email = `user${Date.now()}@test.com`;
-    const password = 'test123';
+  const email = `user${Date.now()}@test.com`;
+  const password = 'password123';
+    // Register user before login
     await request(app.getHttpServer())
       .post('/auth/register')
       .send({ email, password });
@@ -63,7 +66,14 @@ describe('POST /shorten (e2e)', () => {
       .post('/auth/login')
       .send({ email, password });
 
-    const token = loginRes.body.access_token || loginRes.body.accessToken;
+      // Debug log if login fails
+    // if (loginRes.status !== 200) {
+    //   console.error('Login failed:', loginRes.body);
+    // }
+
+  expect([200, 201]).toContain(loginRes.status);
+
+  const token = loginRes.body.data?.data?.accessToken || loginRes.body.data?.accessToken || loginRes.body.data?.access_token;
     expect(token).toBeDefined();
 
     const res = await request(app.getHttpServer())
@@ -72,8 +82,8 @@ describe('POST /shorten (e2e)', () => {
       .send({ originalUrl: 'http://example.com', alias: 'myalias' });
 
     expect(res.status).toBe(201);
-    expect(res.body.short).toBe('myalias');
-    expect(res.body.ownerId).toBeDefined();
+    expect(res.body.data.short).toBe('myalias');
+    expect(res.body.data.ownerId).toBeDefined();
   });
 
   it('should fail with duplicate alias', async () => {

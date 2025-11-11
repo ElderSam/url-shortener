@@ -52,6 +52,19 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Invalid or expired token",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "invalidToken": {
+                    "summary": "Invalid or expired token",
+                    "value": { "statusCode": 401, "message": "Invalid or expired token", "error": "Unauthorized" }
+                  }
+                }
+              }
+            }
           }
         }
       }

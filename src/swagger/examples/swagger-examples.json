@@ -71,6 +71,11 @@
           "summary": "Invalid input",
           "value": { "statusCode": 400, "message": "URL must be valid and include http:// or https://", "error": "Bad Request" }
         }
+        ,
+        "invalidToken": {
+          "summary": "Invalid or expired token",
+          "value": { "statusCode": 401, "message": "Invalid or expired token", "error": "Unauthorized" }
+        }
       }
     }
   }

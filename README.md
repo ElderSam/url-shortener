@@ -2,9 +2,10 @@
 ## Description
 A url shortener made with NestJS and PostgreSQL.
 
-## Deploy Link
-https://url-shortener2-xzhs.onrender.com
+## Deploy Link (Swagger link)
+API documentation: https://url-shortener2-xzhs.onrender.com/api
 
+📦 **[Deploy Guide for Render.com](./RENDER_DEPLOYMENT.md)** - Step-by-step instructions to deploy this application on Render.
 
 ## Diagram - main functionalities
 ![main functionalities overview](url-shortener-diagram.png)

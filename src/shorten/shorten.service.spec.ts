@@ -344,5 +344,40 @@ describe('ShortenService', () => {
         }
       });
     });
+
+    it('should order URLs by createdAt desc (most recent first)', async () => {
+      const mockUrls = [
+        {
+          id: 'id1',
+          originalUrl: 'http://example.com/newest',
+          slug: 'newest',
+          alias: null,
+          accessCount: 0,
+          createdAt: new Date('2024-01-03'),
+          updatedAt: new Date('2024-01-03'),
+        },
+        {
+          id: 'id2',
+          originalUrl: 'http://example.com/oldest',
+          slug: 'oldest',
+          alias: null,
+          accessCount: 0,
+          createdAt: new Date('2024-01-01'),
+          updatedAt: new Date('2024-01-01'),
+        },
+      ];
+
+      mockPrisma.shortUrl.findMany = jest.fn().mockResolvedValue(mockUrls);
+
+      await service.listUserUrls('user1');
+
+      expect(mockPrisma.shortUrl.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          orderBy: {
+            createdAt: 'desc'
+          }
+        })
+      );
+    });
   });
 });

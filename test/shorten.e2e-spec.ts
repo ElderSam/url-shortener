@@ -66,12 +66,8 @@ describe('POST /shorten (e2e)', () => {
       .post('/auth/login')
       .send({ email, password });
 
-      // Debug log if login fails
-    // if (loginRes.status !== 200) {
-    //   console.error('Login failed:', loginRes.body);
-    // }
 
-  expect([200, 201]).toContain(loginRes.status);
+  expect(loginRes.status).toBe(200);
 
   const token = loginRes.body.data?.data?.accessToken || loginRes.body.data?.accessToken || loginRes.body.data?.access_token;
     expect(token).toBeDefined();

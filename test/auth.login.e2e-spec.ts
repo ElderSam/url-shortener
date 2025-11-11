@@ -38,12 +38,15 @@ describe('AuthController (login e2e)', () => {
   });
 
   it('should login successfully and return JWT', async () => {
-    // User is registered in beforeEach
     const res = await request(app.getHttpServer())
       .post('/auth/login')
       .send(testUser);
 
-    expect([200, 201]).toContain(res.status); // Accept 200 or 201 for login
+      // if (res.status !== 200) {
+    //   console.error('Login failed:', res.body);
+    // }
+
+    expect(res.status).toBe(200); // Only accept 200 OK for login
     expect(res.body.data).toHaveProperty('accessToken');
     expect(typeof res.body.data.accessToken).toBe('string');
   });

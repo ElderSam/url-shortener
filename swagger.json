@@ -5,7 +5,7 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/auth/register": {
+  "/auth/register": {
       "post": {
         "tags": ["Auth"],
         "summary": "Register a new user",
@@ -67,11 +67,84 @@
           }
         }
       }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Login and get JWT token",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              },
+              "examples": {
+                "default": {
+                  "summary": "Valid login request",
+                  "value": { "email": "user@email.com", "password": "password123" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "success": {
+                    "summary": "Login successful",
+                    "value": { "accessToken": "jwt-token" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid credentials",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "validationError": {
+                    "summary": "Validation error",
+                    "value": { "statusCode": 400, "message": "Email is required", "error": "Bad Request" }
+                  },
+                  "invalidCredentials": {
+                    "summary": "Invalid credentials",
+                    "value": { "statusCode": 400, "message": "Invalid credentials", "error": "Bad Request" }
+                  },
+                  "rateLimit": {
+                    "summary": "Too many login attempts",
+                    "value": { "statusCode": 400, "message": "Too many login attempts. Please try again later.", "error": "Bad Request" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
       "RegisterDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user@email.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123",
+            "minLength": 6
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "LoginDto": {
         "type": "object",
         "properties": {
           "email": {

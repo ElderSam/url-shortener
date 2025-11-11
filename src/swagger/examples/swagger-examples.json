@@ -21,6 +21,32 @@
           "value": { "statusCode": 409, "message": "Email already registered", "error": "Conflict" }
         }
       }
+    },
+    "login": {
+      "request": {
+        "default": {
+          "summary": "Valid login request",
+          "value": { "email": "user@email.com", "password": "password123" }
+        }
+      },
+      "responses": {
+        "success": {
+          "summary": "Login successful",
+          "value": { "accessToken": "jwt-token" }
+        },
+        "validationError": {
+          "summary": "Validation error",
+          "value": { "statusCode": 400, "message": "Email is required", "error": "Bad Request" }
+        },
+        "invalidCredentials": {
+          "summary": "Invalid credentials",
+          "value": { "statusCode": 400, "message": "Invalid credentials", "error": "Bad Request" }
+        },
+        "rateLimit": {
+          "summary": "Too many login attempts",
+          "value": { "statusCode": 400, "message": "Too many login attempts. Please try again later.", "error": "Bad Request" }
+        }
+      }
     }
   }
 }

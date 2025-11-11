@@ -56,7 +56,7 @@
 
  - [ ] Implementar endpoints:
   - [x] `POST /shorten` → cria encurtamento (autenticado ou anônimo)
-  - [ ] `GET /:short` → redireciona e incrementa `accessCount`
+  - [x] `GET /:short` → redireciona e incrementa `accessCount`
   - [ ] `GET /my-urls` → lista URLs do usuário autenticado
   - [ ] `PUT /my-urls/:id` → atualiza URL original
   - [ ] `DELETE /my-urls/:id` → soft delete (`deletedAt`)
@@ -67,8 +67,8 @@
   - [x] Slug não colidir
 - [ ] Testes unitários:
   - [x] Criação de URL
-  - [ ] Redirecionamento
-  - [ ] Contagem de acessos
+  - [x] Redirecionamento
+  - [x] Contagem de acessos
   - [ ] Soft delete
 
 ---

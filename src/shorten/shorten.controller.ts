@@ -1,5 +1,5 @@
 import { Controller, Post, Get, Put, Delete, Param, Body, UseGuards } from '@nestjs/common';
-// import { AuthGuard } from '../auth/guards/auth.guard'; // (to be implemented)
+import { AuthGuard } from '../auth/guards/auth.guard';
 
 @Controller()
 export class ShortenController {
@@ -17,27 +17,27 @@ export class ShortenController {
 		return `redirect ${short}`;
 	}
 
-	// Protected: List user's URLs
-	@Get('my-urls')
-	// @UseGuards(AuthGuard) // (to be implemented)
-	async listMyUrls() {
-		// TODO: Implement listing
-		return 'listMyUrls';
-	}
+		// Protected: List user's URLs
+		@Get('my-urls')
+		@UseGuards(AuthGuard)
+		async listMyUrls() {
+			// TODO: Implement listing
+			return 'listMyUrls';
+		}
 
-	// Protected: Update original URL
-	@Put('my-urls/:id')
-	// @UseGuards(AuthGuard) // (to be implemented)
-	async updateUrl(@Param('id') id: string, @Body() body: any) {
-		// TODO: Implement update
-		return `updateUrl ${id}`;
-	}
+		// Protected: Update original URL
+		@Put('my-urls/:id')
+		@UseGuards(AuthGuard)
+		async updateUrl(@Param('id') id: string, @Body() body: any) {
+			// TODO: Implement update
+			return `updateUrl ${id}`;
+		}
 
-	// Protected: Soft delete URL
-	@Delete('my-urls/:id')
-	// @UseGuards(AuthGuard) // (to be implemented)
-	async deleteUrl(@Param('id') id: string) {
-		// TODO: Implement soft delete
-		return `deleteUrl ${id}`;
-	}
+		// Protected: Soft delete URL
+		@Delete('my-urls/:id')
+		@UseGuards(AuthGuard)
+		async deleteUrl(@Param('id') id: string) {
+			// TODO: Implement soft delete
+			return `deleteUrl ${id}`;
+		}
 }

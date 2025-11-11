@@ -21,7 +21,7 @@ describe('AuthController (register e2e)', () => {
     await truncateAllTables();
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     await app.close();
   });
 
@@ -60,10 +60,14 @@ describe('AuthController (register e2e)', () => {
     await request(app.getHttpServer())
       .post('/auth/register')
       .send({ email: 'already@email.com', password: '123456' });
+
     // Second registration with same email
     const res = await request(app.getHttpServer())
       .post('/auth/register')
       .send({ email: 'already@email.com', password: '123456' });
+
   expect(res.status).toBe(409); // Agora espera ConflictException
+  expect(res.body).toHaveProperty('error');
+  expect(res.body.error).toBe('Conflict');
   });
 });

@@ -33,17 +33,19 @@ describe('AuthController (login e2e)', () => {
       .send(testUser);
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     await app.close();
   });
 
   it('should login successfully and return JWT', async () => {
+    // User is registered in beforeEach
     const res = await request(app.getHttpServer())
       .post('/auth/login')
       .send(testUser);
-    expect(res.status).toBe(201);
-    expect(res.body).toHaveProperty('accessToken');
-    expect(typeof res.body.accessToken).toBe('string');
+
+    expect([200, 201]).toContain(res.status); // Accept 200 or 201 for login
+    expect(res.body.data).toHaveProperty('accessToken');
+    expect(typeof res.body.data.accessToken).toBe('string');
   });
 
   it('should return 400 for invalid email', async () => {

@@ -25,7 +25,11 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         error = null;
       } else if (typeof res === 'object' && res !== null) {
         message = (res as any).message || message;
-        error = (res as any).error || null;
+        if (status === HttpStatus.CONFLICT) {
+          error = message;
+        } else {
+          error = (res as any).error || null;
+        }
       }
     }
 

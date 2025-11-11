@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaClient, Prisma } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
 import { PrismaService } from '../prisma/prisma.service';
@@ -22,16 +22,16 @@ export class ShortenService {
     if (dto.alias) {
       // Regex: ^[a-z0-9_-]{3,30}$
       if (!/^[a-z0-9_-]{3,30}$/i.test(dto.alias)) {
-        throw new Error('Alias must be 3-30 chars, [a-z0-9_-]');
+        throw new BadRequestException('Alias must be 3-30 chars, [a-z0-9_-]');
       }
       // Reserved routes
       const reserved = ['auth', 'docs', 'api', 'shorten', 'my-urls'];
       if (reserved.includes(dto.alias.toLowerCase())) {
-        throw new Error('Alias is a reserved route');
+        throw new BadRequestException('Alias is a reserved route');
       }
       const aliasExists = await this.prisma.shortUrl.findUnique({ where: { alias: dto.alias } });
       if (aliasExists) {
-        throw new Error('Alias already in use');
+        throw new BadRequestException('Alias already in use');
       }
       alias = dto.alias;
     }

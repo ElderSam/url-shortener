@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
-import { BadRequestException } from '@nestjs/common';
+import { ConflictException } from '@nestjs/common';
 
 describe('AuthService - register', () => {
   let authService: AuthService;
@@ -53,7 +53,7 @@ describe('AuthService - register', () => {
   it('should throw BadRequestException if email already exists (409)', async () => {
     const dto: RegisterDto = { email: 'test@email.com', password: '123456' };
     (usersService.findByEmail as jest.Mock).mockResolvedValue({ id: 1, email: 'test@email.com' });
-    await expect(authService.register(dto)).rejects.toThrow(BadRequestException);
+    await expect(authService.register(dto)).rejects.toThrow(ConflictException);
   });
 
   it('should throw error for empty password', async () => {

@@ -54,22 +54,22 @@
 
  - [x] Criar serviço de geração de `slug` aleatório (6 caracteres base62)
 
- - [ ] Implementar endpoints:
+ - [x] Implementar endpoints:
   - [x] `POST /shorten` → cria encurtamento (autenticado ou anônimo)
   - [x] `GET /:short` → redireciona e incrementa `accessCount`
   - [x] `GET /my-urls` → lista URLs do usuário autenticado
   - [x] `PUT /my-urls/:id` → atualiza URL original
-  - [ ] `DELETE /my-urls/:id` → soft delete (`deletedAt`)
+  - [x] `DELETE /my-urls/:id` → soft delete (`deletedAt`)
 
  - [x] Encurtamento - Adicionar validações:
   - [x] URL válida (http/https)
   - [x] Alias único e dentro da regex correta
   - [x] Slug não colidir
-- [ ] Testes unitários:
+- [x] Testes unitários:
   - [x] Criação de URL
   - [x] Redirecionamento
   - [x] Contagem de acessos
-  - [ ] Soft delete
+  - [x] Soft delete
 
 ---
 

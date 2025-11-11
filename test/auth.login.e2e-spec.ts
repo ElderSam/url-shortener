@@ -28,12 +28,13 @@ describe('AuthController (login e2e)', () => {
       delete globalAttempts[key];
     }
     // Register user for login tests
-    await request(app.getHttpServer())
+    const registerRes = await request(app.getHttpServer())
       .post('/auth/register')
       .send(testUser);
+    expect(registerRes.status).toBe(201);
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     await app.close();
   });
 
@@ -41,10 +42,6 @@ describe('AuthController (login e2e)', () => {
     const res = await request(app.getHttpServer())
       .post('/auth/login')
       .send(testUser);
-
-      // if (res.status !== 200) {
-    //   console.error('Login failed:', res.body);
-    // }
 
     expect(res.status).toBe(200); // Only accept 200 OK for login
     expect(res.body.data).toHaveProperty('accessToken');

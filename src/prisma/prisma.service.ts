@@ -3,17 +3,17 @@ import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class PrismaService implements OnModuleInit, OnModuleDestroy {
-  public prismaClient: PrismaClient;
+  public prisma: PrismaClient;
 
   constructor() {
-    this.prismaClient = new PrismaClient();
+    this.prisma = new PrismaClient();
   }
 
   async onModuleInit(): Promise<void> {
-    await this.prismaClient.$connect();
+    await this.prisma.$connect();
   }
 
   async onModuleDestroy(): Promise<void> {
-    await this.prismaClient.$disconnect();
+    await this.prisma.$disconnect();
   }
 }

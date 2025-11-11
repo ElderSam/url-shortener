@@ -31,8 +31,8 @@
 - [ ] Implementar endpoints:
   - [x] `POST /auth/register` → cria usuário com senha hash (bcrypt)
   - [x] `POST /auth/login` → retorna JWT válido
-- [ ] Criar `AuthGuard` que valida o token JWT
-- [ ] Testes unitários:
+- [x] Criar `AuthGuard` que valida o token JWT
+- [x] Testes unitários:
   - [x] Criação de usuário
   - [x] Login válido e inválido
 - [x] Documentar endpoints no Swagger
@@ -42,7 +42,7 @@
 ## Etapa 3 — Encurtamento de URLs
 **Objetivo:** desenvolver a funcionalidade principal do sistema.
 
-- [ ] Criar módulo `shorten` (ou `urls`)
+- [x] Criar módulo `shorten` (ou `urls`)
 - [ ] Criar entidade `ShortUrl`:
   - [ ] `id`
   - [ ] `originalUrl`
@@ -51,15 +51,18 @@
   - [ ] `ownerId` (FK para `User`)
   - [ ] `accessCount`
   - [ ] `createdAt`, `updatedAt`, `deletedAt`
+
 - [ ] Criar serviço de geração de `slug` aleatório (6 caracteres base62)
+
 - [ ] Implementar endpoints:
   - [ ] `POST /shorten` → cria encurtamento (autenticado ou anônimo)
   - [ ] `GET /:short` → redireciona e incrementa `accessCount`
   - [ ] `GET /my-urls` → lista URLs do usuário autenticado
   - [ ] `PUT /my-urls/:id` → atualiza URL original
   - [ ] `DELETE /my-urls/:id` → soft delete (`deletedAt`)
-- [ ] Adicionar validações:
-  - [ ] URL válida (http/https)
+
+- [ ] Encurtamento - Adicionar validações:
+  - [x] URL válida (http/https)
   - [ ] Alias único e dentro da regex correta
   - [ ] Slug não colidir
 - [ ] Testes unitários:
@@ -78,6 +81,7 @@
   - [ ] `AuthService`
   - [ ] `ShortenService`
   - [ ] `RedirectController`
+
 - [x] Rodar ESLint e Prettier (automatizar via script)
 - [ ] Adicionar script `npm run test:watch`
 
@@ -92,6 +96,7 @@
   - [ ] Descrição dos endpoints
   - [ ] Instruções para rodar testes
   - [ ] Explicação sobre escalabilidade (horizontal/vertical)
+
 - [ ] Criar **diagrama de arquitetura** (Figma, Excalidraw, Miro, etc.)
 - [ ] Fazer commits semânticos (`feat:`, `fix:`, `chore:`)
 - [ ] Subir para repositório público no GitHub

@@ -5,7 +5,57 @@
     "version": "1.0.0"
   },
   "paths": {
-  "/auth/register": {
+    "/shorten": {
+      "post": {
+        "tags": ["Shorten"],
+        "summary": "Shorten a URL (anonymous or authenticated)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShortenUrlDto"
+              },
+              "examples": {
+                "default": {
+                  "summary": "Valid request",
+                  "value": { "originalUrl": "https://example.com", "alias": "myalias" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Shortened URL created successfully",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "success": {
+                    "summary": "Shortened URL created",
+                    "value": { "shortUrl": "https://short.ly/myalias", "originalUrl": "https://example.com", "alias": "myalias" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "invalidInput": {
+                    "summary": "Invalid input",
+                    "value": { "statusCode": 400, "message": "URL must be valid and include http:// or https://", "error": "Bad Request" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/register": {
       "post": {
         "tags": ["Auth"],
         "summary": "Register a new user",
@@ -138,6 +188,20 @@
   },
   "components": {
     "schemas": {
+      "ShortenUrlDto": {
+        "type": "object",
+        "properties": {
+          "originalUrl": {
+            "type": "string",
+            "example": "https://example.com"
+          },
+          "alias": {
+            "type": "string",
+            "example": "myalias"
+          }
+        },
+        "required": ["originalUrl"]
+      },
       "RegisterDto": {
         "type": "object",
         "properties": {

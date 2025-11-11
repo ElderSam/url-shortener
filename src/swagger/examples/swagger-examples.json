@@ -48,5 +48,25 @@
         }
       }
     }
+  },
+  "shorten": {
+    "shorten": {
+      "request": {
+        "default": {
+          "summary": "Valid request",
+          "value": { "originalUrl": "https://example.com", "alias": "myalias" }
+        }
+      },
+      "responses": {
+        "success": {
+          "summary": "Shortened URL created",
+          "value": { "shortUrl": "https://short.ly/myalias", "originalUrl": "https://example.com", "alias": "myalias" }
+        },
+        "invalidInput": {
+          "summary": "Invalid input",
+          "value": { "statusCode": 400, "message": "URL must be valid and include http:// or https://", "error": "Bad Request" }
+        }
+      }
+    }
   }
 }

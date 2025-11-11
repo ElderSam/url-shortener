@@ -9,6 +9,12 @@ https://url-shortener2-xzhs.onrender.com
 ## Diagram - main functionalities
 ![alt text](url-shortener-diagram.png)
 
+## Architecture Diagram
+
+📊 **[View detailed architecture diagram](./architecture-diagram.md)** - Complete ASCII diagram showing all layers, components, and data flow.
+
+![Architecture Overview](url-shortener-diagram.png)
+
 ## Project setup
 
 ### 1. Environment Variables

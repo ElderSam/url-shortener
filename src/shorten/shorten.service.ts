@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { PrismaClient, Prisma } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
 import { PrismaService } from '../prisma/prisma.service';
@@ -109,5 +109,42 @@ export class ShortenService {
       ...url,
       shortUrl: `${baseUrl}/${url.alias ?? url.slug}`
     }));
+  }
+
+  async updateUserUrl(id: string, userId: string, newOriginalUrl: string) {
+    // Find the URL and verify ownership
+    const shortUrl = await this.prisma.shortUrl.findUnique({
+      where: { id }
+    });
+
+    if (!shortUrl || shortUrl.deletedAt !== null) {
+      throw new NotFoundException('Short URL not found');
+    }
+
+    if (shortUrl.ownerId !== userId) {
+      throw new ForbiddenException('You do not have permission to update this URL');
+    }
+
+    // Update the originalUrl
+    const updated = await this.prisma.shortUrl.update({
+      where: { id },
+      data: { originalUrl: newOriginalUrl },
+      select: {
+        id: true,
+        originalUrl: true,
+        slug: true,
+        alias: true,
+        accessCount: true,
+        createdAt: true,
+        updatedAt: true,
+      }
+    });
+
+    // Build short URL with BASE_URL
+    const baseUrl = process.env.BASE_URL || '';
+    return {
+      ...updated,
+      shortUrl: `${baseUrl}/${updated.alias ?? updated.slug}`
+    };
   }
 }

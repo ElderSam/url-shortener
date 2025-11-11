@@ -2,6 +2,7 @@ import { Controller, Post, Get, Put, Delete, Param, Body, UseGuards, Req, Unauth
 import type { Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { ShortenUrlDto } from './dto/shorten-url.dto';
+import { UpdateUrlDto } from './dto/update-url.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { ShortenService } from './shorten.service';
 
@@ -40,12 +41,12 @@ export class ShortenController {
 		return this.shortenService.listUserUrls(userId);
 	}
 
-	// Protected: Update original URL
+	// Protected: Update URL
 	@Put('my-urls/:id')
 	@UseGuards(AuthGuard)
-	async updateUrl(@Param('id') id: string, @Body() body: any) {
-		// TODO: Implement update
-		return `updateUrl ${id}`;
+	async updateUrl(@Param('id') id: string, @Body() dto: UpdateUrlDto, @Req() request) {
+		const userId = request.user.sub;
+		return this.shortenService.updateUserUrl(id, userId, dto.originalUrl);
 	}
 
 	// Protected: Soft delete URL

@@ -10,7 +10,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Enable global validation for DTOs
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.useGlobalPipes(new ValidationPipe({
+    transform: true, // enables transformation
+    whitelist: true, // optional: removes fields not defined in the DTO
+  }));
 
   // Global response interceptor
   app.useGlobalInterceptors(new ResponseInterceptor());

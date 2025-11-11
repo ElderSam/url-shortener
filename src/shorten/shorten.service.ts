@@ -17,16 +17,23 @@ export class ShortenService {
   }
 
   async createShortUrl(dto: ShortenUrlDto, ownerId?: string) {
-    // If alias is provided, validate uniqueness and regex
+    let alias: string | null = null;
+    // If alias is provided, validate uniqueness, regex, and reserved routes
     if (dto.alias) {
-      const aliasExists = await this.prisma.shortUrl.findUnique({ where: { alias: dto.alias } });
-      if (aliasExists) {
-        throw new Error('Alias already in use');
-      }
       // Regex: ^[a-z0-9_-]{3,30}$
       if (!/^[a-z0-9_-]{3,30}$/i.test(dto.alias)) {
         throw new Error('Alias must be 3-30 chars, [a-z0-9_-]');
       }
+      // Reserved routes
+      const reserved = ['auth', 'docs', 'api', 'shorten', 'my-urls'];
+      if (reserved.includes(dto.alias.toLowerCase())) {
+        throw new Error('Alias is a reserved route');
+      }
+      const aliasExists = await this.prisma.shortUrl.findUnique({ where: { alias: dto.alias } });
+      if (aliasExists) {
+        throw new Error('Alias already in use');
+      }
+      alias = dto.alias;
     }
 
     // Generate unique slug
@@ -37,10 +44,19 @@ export class ShortenService {
       data: {
         originalUrl: dto.originalUrl,
         slug,
-        alias: dto.alias ?? null,
+        alias,
         ownerId: ownerId ?? null,
       },
     });
-    return shortUrl;
+    // Return public identifier (alias if present, else slug)
+    return {
+      id: shortUrl.id,
+      originalUrl: shortUrl.originalUrl,
+      short: alias ?? slug,
+      ownerId: shortUrl.ownerId,
+      // accessCount: shortUrl.accessCount,
+      createdAt: shortUrl.createdAt,
+      // updatedAt: shortUrl.updatedAt,
+    };
   }
 }

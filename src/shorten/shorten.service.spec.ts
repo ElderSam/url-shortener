@@ -9,6 +9,7 @@ const mockPrisma = {
   shortUrl: {
     findUnique: jest.fn(),
     findFirst: jest.fn(),
+    findMany: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
     deleteMany: jest.fn().mockResolvedValue({}),
@@ -226,6 +227,120 @@ describe('ShortenService', () => {
             { alias: 'testalias' } // lowercase
           ],
           deletedAt: null
+        }
+      });
+    });
+  });
+
+  // Tests for listUserUrls
+  describe('listUserUrls', () => {
+    it('should list all active URLs for a user', async () => {
+      const mockUrls = [
+        {
+          id: 'id1',
+          originalUrl: 'http://example.com/1',
+          slug: 'abc123',
+          alias: null,
+          accessCount: 5,
+          createdAt: new Date('2024-01-01'),
+          updatedAt: new Date('2024-01-01'),
+        },
+        {
+          id: 'id2',
+          originalUrl: 'http://example.com/2',
+          slug: 'def456',
+          alias: 'myalias',
+          accessCount: 10,
+          createdAt: new Date('2024-01-02'),
+          updatedAt: new Date('2024-01-02'),
+        },
+      ];
+
+      mockPrisma.shortUrl.findMany = jest.fn().mockResolvedValue(mockUrls);
+
+      const result = await service.listUserUrls('user1');
+
+      expect(result).toHaveLength(2);
+      expect(result[0]).toHaveProperty('shortUrl');
+      expect(result[0].shortUrl).toContain('abc123');
+      expect(result[1].shortUrl).toContain('myalias');
+      expect(mockPrisma.shortUrl.findMany).toHaveBeenCalledWith({
+        where: {
+          ownerId: 'user1',
+          deletedAt: null
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
+        select: {
+          id: true,
+          originalUrl: true,
+          slug: true,
+          alias: true,
+          accessCount: true,
+          createdAt: true,
+          updatedAt: true,
+        }
+      });
+    });
+
+    it('should return empty array when user has no URLs', async () => {
+      mockPrisma.shortUrl.findMany = jest.fn().mockResolvedValue([]);
+
+      const result = await service.listUserUrls('user2');
+
+      expect(result).toEqual([]);
+      expect(mockPrisma.shortUrl.findMany).toHaveBeenCalledWith({
+        where: {
+          ownerId: 'user2',
+          deletedAt: null
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
+        select: {
+          id: true,
+          originalUrl: true,
+          slug: true,
+          alias: true,
+          accessCount: true,
+          createdAt: true,
+          updatedAt: true,
+        }
+      });
+    });
+
+    it('should not include soft-deleted URLs', async () => {
+      mockPrisma.shortUrl.findMany = jest.fn().mockResolvedValue([
+        {
+          id: 'id1',
+          originalUrl: 'http://example.com',
+          slug: 'abc123',
+          alias: null,
+          accessCount: 0,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }
+      ]);
+
+      const result = await service.listUserUrls('user1');
+
+      expect(mockPrisma.shortUrl.findMany).toHaveBeenCalledWith({
+        where: {
+          ownerId: 'user1',
+          deletedAt: null // Ensuring soft-deleted are excluded
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
+        select: {
+          id: true,
+          originalUrl: true,
+          slug: true,
+          alias: true,
+          accessCount: true,
+          createdAt: true,
+          updatedAt: true,
         }
       });
     });

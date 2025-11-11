@@ -1,4 +1,5 @@
-import { Controller, Post, Get, Put, Delete, Param, Body, UseGuards, Req, UnauthorizedException } from '@nestjs/common';
+import { Controller, Post, Get, Put, Delete, Param, Body, UseGuards, Req, UnauthorizedException, Res } from '@nestjs/common';
+import type { Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { ShortenUrlDto } from './dto/shorten-url.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
@@ -33,9 +34,9 @@ export class ShortenController {
 
 	// Public: Redirect and count access
 	@Get(':short')
-	async redirect(@Param('short') short: string) {
-		// TODO: Implement redirect
-		return `redirect ${short}`;
+	async redirect(@Param('short') short: string, @Res() res: Response) {
+		const originalUrl = await this.shortenService.findAndIncrementAccess(short);
+		return res.redirect(302, originalUrl);
 	}
 
 	// Protected: List user's URLs

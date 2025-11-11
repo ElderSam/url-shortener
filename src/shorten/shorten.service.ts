@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { PrismaClient, Prisma } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
 import { PrismaService } from '../prisma/prisma.service';
@@ -56,5 +56,30 @@ export class ShortenService {
       shortUrl: `${baseUrl}/${shortPath}`,
       ownerId: shortUrl.ownerId,
     };
+  }
+
+  async findAndIncrementAccess(shortCode: string): Promise<string> {
+    // Find by slug or alias (case-sensitive for slug, case-insensitive for alias)
+    const shortUrl = await this.prisma.shortUrl.findFirst({
+      where: {
+        OR: [
+          { slug: shortCode },
+          { alias: shortCode.toLowerCase() }
+        ],
+        deletedAt: null // Only active URLs
+      }
+    });
+
+    if (!shortUrl) {
+      throw new NotFoundException('Short URL not found');
+    }
+
+    // Increment accessCount
+    await this.prisma.shortUrl.update({
+      where: { id: shortUrl.id },
+      data: { accessCount: { increment: 1 } }
+    });
+
+    return shortUrl.originalUrl;
   }
 }

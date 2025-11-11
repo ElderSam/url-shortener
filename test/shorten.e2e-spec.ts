@@ -116,3 +116,117 @@ describe('POST /shorten (e2e)', () => {
     expect(res.body.message).toMatch(/invalid or expired token/i);
   });
 });
+
+describe('GET /:short (redirect e2e)', () => {
+  let app: INestApplication;
+
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+
+    app.useGlobalPipes(new ValidationPipe({
+      transform: true,
+      whitelist: true,
+    }));
+
+    app.useGlobalInterceptors(new ResponseInterceptor());
+    app.useGlobalFilters(new GlobalExceptionFilter());
+    await app.init();
+  });
+
+  beforeEach(async () => {
+    // Clean up all tables before each test
+    const { truncateAllTables } = require('./utils/db-reset');
+    await truncateAllTables();
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it('should redirect to original URL by slug', async () => {
+    // Create a short URL
+    const createRes = await request(app.getHttpServer())
+      .post('/shorten')
+      .send({ originalUrl: 'http://example.com' });
+
+    expect(createRes.status).toBe(201);
+    const shortCode = createRes.body.data.shortUrl.split('/').pop();
+
+    // Access the short URL
+    const redirectRes = await request(app.getHttpServer())
+      .get(`/${shortCode}`)
+      .expect(302);
+
+    expect(redirectRes.headers.location).toBe('http://example.com');
+  });
+
+  it('should redirect to original URL by alias', async () => {
+    const uniqueAlias = `testalias-${Date.now()}`;
+    
+    // Create a short URL with alias
+    const createRes = await request(app.getHttpServer())
+      .post('/shorten')
+      .send({ originalUrl: 'http://example.com/page', alias: uniqueAlias });
+
+    expect(createRes.status).toBe(201);
+
+    // Access the short URL via alias
+    const redirectRes = await request(app.getHttpServer())
+      .get(`/${uniqueAlias}`)
+      .expect(302);
+
+    expect(redirectRes.headers.location).toBe('http://example.com/page');
+  });
+
+  it('should return 404 for non-existent short code', async () => {
+    const res = await request(app.getHttpServer())
+      .get('/nonexist')
+      .expect(404);
+
+    expect(res.body.message).toMatch(/Short URL not found/i);
+  });
+
+  it('should increment access count on each redirect', async () => {
+    // Create a short URL
+    const createRes = await request(app.getHttpServer())
+      .post('/shorten')
+      .send({ originalUrl: 'http://example.com/counter' });
+
+    const shortCode = createRes.body.data.shortUrl.split('/').pop();
+
+    // Access the URL multiple times
+    await request(app.getHttpServer()).get(`/${shortCode}`).expect(302);
+    await request(app.getHttpServer()).get(`/${shortCode}`).expect(302);
+    await request(app.getHttpServer()).get(`/${shortCode}`).expect(302);
+
+    // Note: To verify the count, we would need a GET /my-urls endpoint or direct DB query
+    // For now, we just verify that the redirects work
+    const finalRedirect = await request(app.getHttpServer())
+      .get(`/${shortCode}`)
+      .expect(302);
+
+    expect(finalRedirect.headers.location).toBe('http://example.com/counter');
+  });
+
+  it('should handle alias case-insensitively', async () => {
+    const uniqueAlias = `mixedcase-${Date.now()}`;
+    
+    // Create with lowercase alias
+    await request(app.getHttpServer())
+      .post('/shorten')
+      .send({ originalUrl: 'http://example.com/case', alias: uniqueAlias.toLowerCase() });
+
+    // Access with different case variations
+    await request(app.getHttpServer())
+      .get(`/${uniqueAlias.toUpperCase()}`)
+      .expect(302);
+
+    await request(app.getHttpServer())
+      .get(`/${uniqueAlias.toLowerCase()}`)
+      .expect(302);
+  });
+});

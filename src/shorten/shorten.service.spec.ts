@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { NotFoundException } from '@nestjs/common';
 import { ShortenService } from './shorten.service';
 import { SlugService } from './slug.service';
 import { PrismaService } from '../prisma/prisma.service';
@@ -7,7 +8,9 @@ import { ShortenUrlDto } from './dto/shorten-url.dto';
 const mockPrisma = {
   shortUrl: {
     findUnique: jest.fn(),
+    findFirst: jest.fn(),
     create: jest.fn(),
+    update: jest.fn(),
     deleteMany: jest.fn().mockResolvedValue({}),
   },
 };
@@ -120,5 +123,111 @@ describe('ShortenService', () => {
     mockPrisma.shortUrl.create.mockRejectedValue(new Error('DB error'));
     const dto: ShortenUrlDto = { originalUrl: 'http://test.com' };
     await expect(service.createShortUrl(dto)).rejects.toThrow('DB error');
+  });
+
+  // Tests for findAndIncrementAccess
+  describe('findAndIncrementAccess', () => {
+    it('should find by slug and increment access count', async () => {
+      const mockShortUrl = {
+        id: 'id1',
+        originalUrl: 'http://example.com',
+        slug: 'abc123',
+        alias: null,
+        ownerId: null,
+        accessCount: 5,
+        deletedAt: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      mockPrisma.shortUrl.findFirst.mockResolvedValue(mockShortUrl);
+      mockPrisma.shortUrl.update.mockResolvedValue({ ...mockShortUrl, accessCount: 6 });
+
+      const result = await service.findAndIncrementAccess('abc123');
+
+      expect(result).toBe('http://example.com');
+      expect(mockPrisma.shortUrl.findFirst).toHaveBeenCalledWith({
+        where: {
+          OR: [
+            { slug: 'abc123' },
+            { alias: 'abc123' }
+          ],
+          deletedAt: null
+        }
+      });
+      expect(mockPrisma.shortUrl.update).toHaveBeenCalledWith({
+        where: { id: 'id1' },
+        data: { accessCount: { increment: 1 } }
+      });
+    });
+
+    it('should find by alias and increment access count', async () => {
+      const mockShortUrl = {
+        id: 'id2',
+        originalUrl: 'http://example.com/page',
+        slug: 'xyz789',
+        alias: 'myalias',
+        ownerId: 'user1',
+        accessCount: 10,
+        deletedAt: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      mockPrisma.shortUrl.findFirst.mockResolvedValue(mockShortUrl);
+      mockPrisma.shortUrl.update.mockResolvedValue({ ...mockShortUrl, accessCount: 11 });
+
+      const result = await service.findAndIncrementAccess('myalias');
+
+      expect(result).toBe('http://example.com/page');
+      expect(mockPrisma.shortUrl.update).toHaveBeenCalledWith({
+        where: { id: 'id2' },
+        data: { accessCount: { increment: 1 } }
+      });
+    });
+
+    it('should throw NotFoundException when URL not found', async () => {
+      mockPrisma.shortUrl.findFirst.mockResolvedValue(null);
+
+      await expect(service.findAndIncrementAccess('invalid')).rejects.toThrow(NotFoundException);
+      await expect(service.findAndIncrementAccess('invalid')).rejects.toThrow('Short URL not found');
+    });
+
+    it('should throw NotFoundException when URL is soft-deleted', async () => {
+      // findFirst with deletedAt: null filter returns null for soft-deleted URLs
+      mockPrisma.shortUrl.findFirst.mockResolvedValue(null);
+
+      await expect(service.findAndIncrementAccess('deleted')).rejects.toThrow(NotFoundException);
+    });
+
+    it('should normalize alias to lowercase', async () => {
+      const mockShortUrl = {
+        id: 'id3',
+        originalUrl: 'http://example.com/test',
+        slug: 'def456',
+        alias: 'testalias',
+        ownerId: null,
+        accessCount: 0,
+        deletedAt: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      mockPrisma.shortUrl.findFirst.mockResolvedValue(mockShortUrl);
+      mockPrisma.shortUrl.update.mockResolvedValue({ ...mockShortUrl, accessCount: 1 });
+
+      const result = await service.findAndIncrementAccess('TestAlias');
+
+      expect(result).toBe('http://example.com/test');
+      expect(mockPrisma.shortUrl.findFirst).toHaveBeenCalledWith({
+        where: {
+          OR: [
+            { slug: 'TestAlias' },
+            { alias: 'testalias' } // lowercase
+          ],
+          deletedAt: null
+        }
+      });
+    });
   });
 });

@@ -53,7 +53,12 @@
     "shorten": {
       "request": {
         "default": {
-          "summary": "Valid request",
+          "summary": "Valid request (anonymous)",
+          "value": { "originalUrl": "https://example.com", "alias": "myalias" }
+        },
+        "withBearerToken": {
+          "summary": "Valid request with Bearer Token",
+          "headers": { "Authorization": "Bearer <jwt-token>" },
           "value": { "originalUrl": "https://example.com", "alias": "myalias" }
         }
       },

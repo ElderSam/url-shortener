@@ -4,7 +4,10 @@ import { SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
-import * as swaggerDocument from '../swagger.json';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import { OpenAPIObject } from '@nestjs/swagger';
+const swaggerDocument: OpenAPIObject = JSON.parse(readFileSync(join(__dirname, '../swagger.json'), 'utf8'));
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

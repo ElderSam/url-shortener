@@ -9,6 +9,7 @@
       "post": {
         "tags": ["Shorten"],
         "summary": "Shorten a URL (anonymous or authenticated)",
+        "security": [ { "bearerAuth": [] } ],
         "requestBody": {
           "required": true,
           "content": {
@@ -187,6 +188,13 @@
     }
   },
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
     "schemas": {
       "ShortenUrlDto": {
         "type": "object",

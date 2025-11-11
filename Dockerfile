@@ -5,34 +5,32 @@ WORKDIR /usr/src/app
 # Install pnpm
 RUN npm install -g pnpm
 
-# Add node user and set ownership
-RUN chown -R node:node /usr/src/app
-
-# Switch to node user
-USER node
-
 # Copy package files first
-COPY --chown=node:node package*.json pnpm-lock.yaml ./
+COPY package*.json pnpm-lock.yaml ./
 
 # Copy prisma schema and configuration
-COPY --chown=node:node prisma ./prisma/
-COPY --chown=node:node .env.example .env
+COPY prisma ./prisma/
 
-# Install dependencies
+# Install dependencies (including dev dependencies for build)
 RUN pnpm install
 
 # Generate Prisma client
 RUN pnpm prisma generate
 
-# Copy remaining source files
-COPY --chown=node:node . .
+# Copy source code
+COPY . .
 
 # Build the application
 RUN pnpm run build
 
+# Verify dist folder exists
+RUN ls -la dist/
+
+# Note: We keep all dependencies (including dev) to ensure Prisma Client works
+# The image size is acceptable for deployment
+
 # Expose port
 EXPOSE 3000
 
-EXPOSE 3000
-
-CMD ["pnpm", "run", "start:dev"]
+# Start production server
+CMD ["node", "dist/src/main"]

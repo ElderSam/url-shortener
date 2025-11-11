@@ -41,9 +41,9 @@ describe('POST /shorten (e2e)', () => {
       .send({ originalUrl: 'http://example.com' });
 
 
-    expect(res.status).toBe(201);
-    expect(res.body.data.short).toMatch(/^[A-Za-z0-9]{6}$/);
-    expect(res.body.data.originalUrl).toBe('http://example.com');
+  expect(res.status).toBe(201);
+  expect(res.body.data.shortUrl).toMatch(/^http:\/\/localhost:3000\/[A-Za-z0-9_-]{6}$/);
+  expect(res.body.data.ownerId).toBeNull();
   });
 
   it('should fail with invalid url', async () => {
@@ -77,9 +77,9 @@ describe('POST /shorten (e2e)', () => {
       .set('Authorization', `Bearer ${token}`)
       .send({ originalUrl: 'http://example.com', alias: 'myalias' });
 
-    expect(res.status).toBe(201);
-    expect(res.body.data.short).toBe('myalias');
-    expect(res.body.data.ownerId).toBeDefined();
+  expect(res.status).toBe(201);
+  expect(res.body.data.shortUrl).toBe('http://localhost:3000/myalias');
+  expect(res.body.data.ownerId).toBeDefined();
   });
 
   it('should fail with duplicate alias', async () => {

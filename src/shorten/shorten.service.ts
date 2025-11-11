@@ -49,15 +49,12 @@ export class ShortenService {
         ownerId: ownerId ?? null,
       },
     });
-    // Return public identifier (alias if present, else slug)
+    // Build the full short URL using BASE_URL
+    const baseUrl = process.env.BASE_URL || '';
+    const shortPath = alias ?? slug;
     return {
-      id: shortUrl.id,
-      originalUrl: shortUrl.originalUrl,
-      short: alias ?? slug,
+      shortUrl: `${baseUrl}/${shortPath}`,
       ownerId: shortUrl.ownerId,
-      // accessCount: shortUrl.accessCount,
-      createdAt: shortUrl.createdAt,
-      // updatedAt: shortUrl.updatedAt,
     };
   }
 }

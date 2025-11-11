@@ -65,7 +65,7 @@
       "responses": {
         "success": {
           "summary": "Shortened URL created",
-          "value": { "shortUrl": "https://short.ly/myalias", "originalUrl": "https://example.com", "alias": "myalias" }
+          "value": { "shortUrl": "http://localhost:3000/myalias", "ownerId": "user-id-or-null" }
         },
         "invalidInput": {
           "summary": "Invalid input",

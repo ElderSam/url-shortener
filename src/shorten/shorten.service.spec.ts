@@ -50,7 +50,10 @@ describe('ShortenService', () => {
     });
     const dto: ShortenUrlDto = { originalUrl: 'http://test.com' };
     const result = await service.createShortUrl(dto, 'user2');
-    expect(result.ownerId).toBe('user2');
+    expect(result).toEqual({
+      shortUrl: expect.stringContaining('http://'),
+      ownerId: 'user2',
+    });
   });
 
   it('should set ownerId null for anonymous user', async () => {
@@ -60,7 +63,10 @@ describe('ShortenService', () => {
     });
     const dto: ShortenUrlDto = { originalUrl: 'http://test.com' };
     const result = await service.createShortUrl(dto);
-    expect(result.ownerId).toBeNull();
+    expect(result).toEqual({
+      shortUrl: expect.stringContaining('http://'),
+      ownerId: null,
+    });
   });
 
   it('should throw if originalUrl is invalid', async () => {
@@ -70,8 +76,8 @@ describe('ShortenService', () => {
     mockPrisma.shortUrl.create.mockResolvedValue({
       id: 'id_invalid', originalUrl: 'invalid-url', slug: 'abc123', alias: null, ownerId: null, accessCount: 0, createdAt: new Date(), updatedAt: new Date(),
     });
-    const result = await service.createShortUrl(dto);
-    expect(result.originalUrl).toBe('invalid-url');
+  const result = await service.createShortUrl(dto);
+  expect(result.shortUrl).toMatch(/^http:\/\/localhost:3000\/[A-Za-z0-9_-]{6}$/);
   });
 
   it('should retry slug if collision occurs', async () => {
@@ -81,8 +87,8 @@ describe('ShortenService', () => {
       id: 'id5', originalUrl: 'http://test.com', slug: 'xyz789', alias: null, ownerId: null, accessCount: 0, createdAt: new Date(), updatedAt: new Date(),
     });
     const dto: ShortenUrlDto = { originalUrl: 'http://test.com' };
-    const result = await service.createShortUrl(dto);
-    expect(result.short).toBe('xyz789');
+  const result = await service.createShortUrl(dto);
+  expect(result.shortUrl).toContain('xyz789');
   });
 
   it('should trim and normalize alias', async () => {
@@ -93,8 +99,8 @@ describe('ShortenService', () => {
     });
     // Provide already-trimmed alias, since DTO transformation does not run in unit tests
     const dto: ShortenUrlDto = { originalUrl: 'http://test.com', alias: 'myalias' };
-    const result = await service.createShortUrl(dto);
-    expect(result.short).toBe('myalias');
+  const result = await service.createShortUrl(dto);
+  expect(result.shortUrl).toContain('myalias');
   });
 
   it('should allow alias at max length', async () => {
@@ -105,8 +111,8 @@ describe('ShortenService', () => {
       id: 'id7', originalUrl: 'http://test.com', slug: 'abc123', alias: maxAlias, ownerId: null, accessCount: 0, createdAt: new Date(), updatedAt: new Date(),
     });
     const dto: ShortenUrlDto = { originalUrl: 'http://test.com', alias: maxAlias };
-    const result = await service.createShortUrl(dto);
-    expect(result.short).toBe(maxAlias);
+  const result = await service.createShortUrl(dto);
+  expect(result.shortUrl).toContain(maxAlias);
   });
 
   it('should throw on database error', async () => {

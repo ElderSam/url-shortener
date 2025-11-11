@@ -25,6 +25,6 @@ export class AuthService {
       password: hashedPassword,
     });
 
-    return { message: 'Registro realizado', user: { id: user.id, email: user.email } };
+    return { message: 'Registro realizado', userId: user.id };
   }
 }

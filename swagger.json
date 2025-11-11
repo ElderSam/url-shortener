@@ -33,7 +33,7 @@
                 "examples": {
                   "success": {
                     "summary": "User registered successfully",
-                    "value": { "message": "Registro realizado", "user": { "id": "uuid", "email": "user@email.com" } }
+                    "value": { "message": "Registro realizado", "userId": "uuid" }
                   }
                 }
               }

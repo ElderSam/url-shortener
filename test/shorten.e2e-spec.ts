@@ -11,6 +11,16 @@ describe('POST /shorten (e2e)', () => {
       imports: [AppModule],
     }).compile();
     app = moduleFixture.createNestApplication();
+    // Add global pipes and interceptors as in main.ts
+    const { ValidationPipe } = require('@nestjs/common');
+    const { ResponseInterceptor } = require('../src/common/interceptors/response.interceptor');
+    const { GlobalExceptionFilter } = require('../src/common/filters/global-exception.filter');
+    app.useGlobalPipes(new ValidationPipe({
+      transform: true,
+      whitelist: true,
+    }));
+    app.useGlobalInterceptors(new ResponseInterceptor());
+    app.useGlobalFilters(new GlobalExceptionFilter());
     await app.init();
   });
 

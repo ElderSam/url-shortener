@@ -304,6 +304,76 @@
             }
           }
         }
+      },
+      "delete": {
+        "tags": ["Shorten"],
+        "summary": "Soft delete a short URL",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "The ID of the short URL to delete"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "URL successfully deleted (no content)"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid token",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "missingToken": {
+                    "summary": "Missing authentication token",
+                    "value": { "statusCode": 401, "message": "Unauthorized", "error": "Unauthorized" }
+                  },
+                  "invalidToken": {
+                    "summary": "Invalid or expired token",
+                    "value": { "statusCode": 401, "message": "Invalid or expired token", "error": "Unauthorized" }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - User does not own this URL",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "forbidden": {
+                    "summary": "Not the owner",
+                    "value": {
+                      "statusCode": 403,
+                      "message": "You do not have permission to delete this URL",
+                      "error": "Forbidden"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - URL does not exist or was already deleted",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "notFound": {
+                    "summary": "URL not found or already deleted",
+                    "value": {
+                      "statusCode": 404,
+                      "message": "Short URL not found",
+                      "error": "Not Found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/auth/register": {

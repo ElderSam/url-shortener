@@ -199,6 +199,38 @@
           }
         }
       }
+    },
+    "deleteUrl": {
+      "responses": {
+        "success": {
+          "summary": "Successfully deleted (204 No Content)",
+          "value": null
+        },
+        "missingToken": {
+          "summary": "Missing authentication token",
+          "value": { "statusCode": 401, "message": "Unauthorized", "error": "Unauthorized" }
+        },
+        "invalidToken": {
+          "summary": "Invalid or expired token",
+          "value": { "statusCode": 401, "message": "Invalid or expired token", "error": "Unauthorized" }
+        },
+        "forbidden": {
+          "summary": "User does not own this URL",
+          "value": {
+            "statusCode": 403,
+            "message": "You do not have permission to delete this URL",
+            "error": "Forbidden"
+          }
+        },
+        "notFound": {
+          "summary": "URL not found or already deleted",
+          "value": {
+            "statusCode": 404,
+            "message": "Short URL not found",
+            "error": "Not Found"
+          }
+        }
+      }
     }
   }
 }

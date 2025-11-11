@@ -114,6 +114,62 @@
         }
       }
     },
+    "/my-urls": {
+      "get": {
+        "tags": ["Shorten"],
+        "summary": "List all short URLs for authenticated user",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "List of user's short URLs",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "success": {
+                    "summary": "Successfully retrieved URLs",
+                    "value": {
+                      "data": [
+                        {
+                          "id": "uuid",
+                          "originalUrl": "https://example.com",
+                          "slug": "abc123",
+                          "alias": null,
+                          "shortUrl": "http://localhost:3000/abc123",
+                          "accessCount": 5,
+                          "createdAt": "2024-01-01T00:00:00.000Z",
+                          "updatedAt": "2024-01-01T00:00:00.000Z"
+                        }
+                      ]
+                    }
+                  },
+                  "empty": {
+                    "summary": "No URLs found",
+                    "value": { "data": [] }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid token",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "missingToken": {
+                    "summary": "Missing authentication token",
+                    "value": { "statusCode": 401, "message": "Unauthorized", "error": "Unauthorized" }
+                  },
+                  "invalidToken": {
+                    "summary": "Invalid or expired token",
+                    "value": { "statusCode": 401, "message": "Invalid or expired token", "error": "Unauthorized" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/auth/register": {
       "post": {
         "tags": ["Auth"],

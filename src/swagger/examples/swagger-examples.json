@@ -99,6 +99,49 @@
           "value": { "statusCode": 404, "message": "Short URL not found", "error": "Not Found" }
         }
       }
+    },
+    "myUrls": {
+      "responses": {
+        "success": {
+          "summary": "List of user's short URLs",
+          "value": {
+            "data": [
+              {
+                "id": "uuid-1",
+                "originalUrl": "https://example.com",
+                "slug": "abc123",
+                "alias": null,
+                "shortUrl": "http://localhost:3000/abc123",
+                "accessCount": 5,
+                "createdAt": "2024-01-01T00:00:00.000Z",
+                "updatedAt": "2024-01-01T00:00:00.000Z"
+              },
+              {
+                "id": "uuid-2",
+                "originalUrl": "https://github.com",
+                "slug": "def456",
+                "alias": "myalias",
+                "shortUrl": "http://localhost:3000/myalias",
+                "accessCount": 10,
+                "createdAt": "2024-01-02T00:00:00.000Z",
+                "updatedAt": "2024-01-02T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        "empty": {
+          "summary": "No URLs found",
+          "value": { "data": [] }
+        },
+        "missingToken": {
+          "summary": "Missing authentication token",
+          "value": { "statusCode": 401, "message": "Unauthorized", "error": "Unauthorized" }
+        },
+        "invalidToken": {
+          "summary": "Invalid or expired token",
+          "value": { "statusCode": 401, "message": "Invalid or expired token", "error": "Unauthorized" }
+        }
+      }
     }
   }
 }

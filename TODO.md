@@ -57,7 +57,7 @@
  - [ ] Implementar endpoints:
   - [x] `POST /shorten` → cria encurtamento (autenticado ou anônimo)
   - [x] `GET /:short` → redireciona e incrementa `accessCount`
-  - [ ] `GET /my-urls` → lista URLs do usuário autenticado
+  - [x] `GET /my-urls` → lista URLs do usuário autenticado
   - [ ] `PUT /my-urls/:id` → atualiza URL original
   - [ ] `DELETE /my-urls/:id` → soft delete (`deletedAt`)
 

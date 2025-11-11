@@ -10,7 +10,7 @@
       "responses": {
         "success": {
           "summary": "User registered successfully",
-          "value": { "message": "Registration successful", "user": { "id": "uuid", "email": "user@email.com" } }
+          "value": { "id": "uuid", "email": "user@email.com" }
         },
         "validationError": {
           "summary": "Validation error",
@@ -32,7 +32,7 @@
       "responses": {
         "success": {
           "summary": "Login successful",
-          "value": { "accessToken": "jwt-token" }
+          "value": { "data": { "accessToken": "jwt-token" }, "message": "Login successful" }
         },
         "validationError": {
           "summary": "Validation error",
@@ -40,7 +40,7 @@
         },
         "invalidCredentials": {
           "summary": "Invalid credentials",
-          "value": { "statusCode": 400, "message": "Invalid credentials", "error": "Bad Request" }
+          "value": { "statusCode": 401, "message": "Invalid credentials", "error": "Unauthorized" }
         },
         "rateLimit": {
           "summary": "Too many login attempts",

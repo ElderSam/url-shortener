@@ -33,7 +33,7 @@
                 "examples": {
                   "success": {
                     "summary": "User registered successfully",
-                    "value": { "message": "Registro realizado", "userId": "uuid" }
+                    "value": { "id": "uuid", "email": "user@email.com" }
                   }
                 }
               }
@@ -46,7 +46,7 @@
                 "examples": {
                   "validationError": {
                     "summary": "Validation error",
-                    "value": { "statusCode": 400, "message": "Email é obrigatório", "error": "Bad Request" }
+                    "value": { "statusCode": 400, "message": "Email is required", "error": "Bad Request" }
                   }
                 }
               }
@@ -59,7 +59,7 @@
                 "examples": {
                   "conflictError": {
                     "summary": "Email already registered",
-                    "value": { "statusCode": 409, "message": "Email já cadastrado", "error": "Conflict" }
+                    "value": { "statusCode": 409, "message": "Email already registered", "error": "Conflict" }
                   }
                 }
               }
@@ -89,31 +89,40 @@
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "Login successful",
             "content": {
               "application/json": {
                 "examples": {
                   "success": {
                     "summary": "Login successful",
-                    "value": { "accessToken": "jwt-token" }
+                    "value": { "data": { "accessToken": "jwt-token" }, "message": "Login successful" }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "invalidCredentials": {
+                    "summary": "Invalid credentials",
+                    "value": { "statusCode": 401, "message": "Invalid credentials", "error": "Unauthorized" }
                   }
                 }
               }
             }
           },
           "400": {
-            "description": "Validation error or invalid credentials",
+            "description": "Validation error or rate limit",
             "content": {
               "application/json": {
                 "examples": {
                   "validationError": {
                     "summary": "Validation error",
                     "value": { "statusCode": 400, "message": "Email is required", "error": "Bad Request" }
-                  },
-                  "invalidCredentials": {
-                    "summary": "Invalid credentials",
-                    "value": { "statusCode": 400, "message": "Invalid credentials", "error": "Bad Request" }
                   },
                   "rateLimit": {
                     "summary": "Too many login attempts",

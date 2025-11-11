@@ -1,4 +1,4 @@
-import { Controller, Post, Body, ValidationPipe, UseGuards, ConflictException } from '@nestjs/common';
+import { Controller, Post, Body, ValidationPipe, UseGuards, ConflictException, HttpCode } from '@nestjs/common';
 import { RateLimitGuard } from './guards/rate-limit.guard';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
@@ -23,6 +23,7 @@ export class AuthController {
 
   @Post('login')
   @UseGuards(RateLimitGuard)
+  @HttpCode(200)
   async login(@Body(ValidationPipe) loginDto: LoginDto) {
     const result = await this.authService.login(loginDto);
     return {

@@ -32,14 +32,7 @@ export class ShortenController {
 		return shortUrl;
 	}
 
-	// Public: Redirect and count access
-	@Get(':short')
-	async redirect(@Param('short') short: string, @Res() res: Response) {
-		const originalUrl = await this.shortenService.findAndIncrementAccess(short);
-		return res.redirect(302, originalUrl);
-	}
-
-	// Protected: List user's URLs
+	// Protected: List user's URLs (MUST come before /:short to avoid route conflict)
 	@Get('my-urls')
 	@UseGuards(AuthGuard)
 	async listMyUrls(@Req() request) {
@@ -61,5 +54,12 @@ export class ShortenController {
 	async deleteUrl(@Param('id') id: string) {
 		// TODO: Implement soft delete
 		return `deleteUrl ${id}`;
+	}
+
+	// Public: Redirect and count access (MUST come after /my-urls to avoid catching it)
+	@Get(':short')
+	async redirect(@Param('short') short: string, @Res() res: Response) {
+		const originalUrl = await this.shortenService.findAndIncrementAccess(short);
+		return res.redirect(302, originalUrl);
 	}
 }

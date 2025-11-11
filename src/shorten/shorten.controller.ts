@@ -42,9 +42,9 @@ export class ShortenController {
 	// Protected: List user's URLs
 	@Get('my-urls')
 	@UseGuards(AuthGuard)
-	async listMyUrls() {
-		// TODO: Implement listing
-		return 'listMyUrls';
+	async listMyUrls(@Req() request) {
+		const userId = request.user.sub;
+		return this.shortenService.listUserUrls(userId);
 	}
 
 	// Protected: Update original URL

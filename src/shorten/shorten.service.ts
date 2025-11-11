@@ -82,4 +82,32 @@ export class ShortenService {
 
     return shortUrl.originalUrl;
   }
+
+  async listUserUrls(userId: string) {
+    const urls = await this.prisma.shortUrl.findMany({
+      where: {
+        ownerId: userId,
+        deletedAt: null // Only active URLs
+      },
+      orderBy: {
+        createdAt: 'desc'
+      },
+      select: {
+        id: true,
+        originalUrl: true,
+        slug: true,
+        alias: true,
+        accessCount: true,
+        createdAt: true,
+        updatedAt: true,
+      }
+    });
+
+    // Build short URLs with BASE_URL
+    const baseUrl = process.env.BASE_URL || '';
+    return urls.map(url => ({
+      ...url,
+      shortUrl: `${baseUrl}/${url.alias ?? url.slug}`
+    }));
+  }
 }

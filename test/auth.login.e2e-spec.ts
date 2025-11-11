@@ -3,7 +3,7 @@ import { truncateAllTables } from './utils/db-reset';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
-import { attempts } from '../src/auth/guards/rate-limit.guard';
+import { attempts, globalAttempts } from '../src/auth/guards/rate-limit.guard';
 
 describe('AuthController (login e2e)', () => {
   let app: INestApplication;
@@ -23,6 +23,9 @@ describe('AuthController (login e2e)', () => {
     // Reset rate limiting attempts for test isolation
     for (const key in attempts) {
       delete attempts[key];
+    }
+    for (const key in globalAttempts) {
+      delete globalAttempts[key];
     }
     // Register user for login tests
     await request(app.getHttpServer())

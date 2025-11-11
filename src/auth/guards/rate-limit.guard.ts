@@ -1,6 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext, BadRequestException } from '@nestjs/common';
 
-const ATTEMPT_LIMIT = 5;
+const ATTEMPT_LIMIT = 3;
 const WINDOW_MS = 60 * 1000; // 1 minute
 const attempts: Record<string, { count: number; timestamp: number }> = {};
 

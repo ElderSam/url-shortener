@@ -25,7 +25,7 @@ describe('AuthController (e2e)', () => {
       .post('/auth/register')
       .send({ email: 'e2e@email.com', password: '123456' });
     expect(res.status).toBe(201);
-    expect(res.body).toHaveProperty('message', 'Registro realizado');
+    expect(res.body).toHaveProperty('message', 'Registration successful');
     expect(typeof res.body.userId).toBe('string');
   });
 

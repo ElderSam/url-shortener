@@ -33,7 +33,7 @@ describe('AuthService', () => {
     (usersService.create as jest.Mock).mockImplementation(async (user) => ({ id: fakeUuid, email: user.email }));
 
     const result = await authService.register(dto);
-    expect(result).toEqual({ message: 'Registro realizado', userId: fakeUuid });
+    expect(result).toEqual({ message: 'Registration successful', userId: fakeUuid });
     expect(typeof result.userId).toBe('string');
     expect(usersService.create).toHaveBeenCalledWith({ email: 'test@email.com', password: expect.any(String) });
   });

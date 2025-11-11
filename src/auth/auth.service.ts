@@ -13,7 +13,7 @@ export class AuthService {
     // Check if email is already registered
     const existingUser = await this.usersService.findByEmail(email);
     if (existingUser) {
-      throw new BadRequestException('Email já cadastrado');
+      throw new BadRequestException('Email already registered');
     }
 
     // Hash password
@@ -25,6 +25,6 @@ export class AuthService {
       password: hashedPassword,
     });
 
-    return { message: 'Registro realizado', userId: user.id };
+    return { message: 'Registration successful', userId: user.id };
   }
 }

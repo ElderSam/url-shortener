@@ -28,7 +28,7 @@
   - [x] `password`
   - [x] `createdAt`
   - [x] `updatedAt`
-- [ ] Implementar endpoints:
+- [x] Implementar endpoints:
   - [x] `POST /auth/register` → cria usuário com senha hash (bcrypt)
   - [x] `POST /auth/login` → retorna JWT válido
 - [x] Criar `AuthGuard` que valida o token JWT
@@ -66,7 +66,7 @@
   - [x] Alias único e dentro da regex correta
   - [x] Slug não colidir
 - [ ] Testes unitários:
-  - [ ] Criação de URL
+  - [x] Criação de URL
   - [ ] Redirecionamento
   - [ ] Contagem de acessos
   - [ ] Soft delete
@@ -76,29 +76,29 @@
 ## Etapa 4 — Testes e Qualidade
 **Objetivo:** garantir cobertura mínima e consistência de código.
 
-- [ ] Configurar Jest com coverage
+- [x] Configurar Jest com coverage
 - [ ] Criar mocks e testes unitários para:
-  - [ ] `AuthService`
-  - [ ] `ShortenService`
+  - [x] `AuthService`
+  - [x] `ShortenService`
   - [ ] `RedirectController`
 
 - [x] Rodar ESLint e Prettier (automatizar via script)
-- [ ] Adicionar script `npm run test:watch`
+- [x] Adicionar script `npm run test:watch`
 
 ---
 
 ## Etapa 5 — Documentação e Entrega
 **Objetivo:** preparar a entrega final de forma profissional.
 
-- [ ] Gerar documentação Swagger (`/docs`)
+- [x] Gerar documentação Swagger (`/docs`)
 - [ ] Criar **README.md** com:
   - [x] Passos para executar com Docker
   - [ ] Descrição dos endpoints
-  - [ ] Instruções para rodar testes
+  - [x] Instruções para rodar testes
   - [ ] Explicação sobre escalabilidade (horizontal/vertical)
 
 - [ ] Criar **diagrama de arquitetura** (Figma, Excalidraw, Miro, etc.)
-- [ ] Fazer commits semânticos (`feat:`, `fix:`, `chore:`)
+- [x] Fazer commits semânticos (`feat:`, `fix:`, `chore:`)
 - [ ] Subir para repositório público no GitHub
 
 ---

@@ -13,7 +13,7 @@ export class ShortenService {
 		private readonly prismaService: PrismaService,
 		private readonly slugService: SlugService,
 	) {
-      this.prisma = this.prismaService.prismaClient;
+    this.prisma = this.prismaService.prismaClient;
   }
 
   async createShortUrl(dto: ShortenUrlDto, ownerId?: string) {

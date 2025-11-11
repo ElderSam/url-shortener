@@ -18,22 +18,23 @@ export class ShortenService {
 
   async createShortUrl(dto: ShortenUrlDto, ownerId?: string) {
     let alias: string | null = null;
-    // If alias is provided, validate uniqueness, regex, and reserved routes
+    // If alias is provided, normalize to lowercase, validate uniqueness, regex, and reserved routes
     if (dto.alias) {
+      const normalizedAlias = dto.alias.toLowerCase();
       // Regex: ^[a-z0-9_-]{3,30}$
-      if (!/^[a-z0-9_-]{3,30}$/i.test(dto.alias)) {
+      if (!/^[a-z0-9_-]{3,30}$/.test(normalizedAlias)) {
         throw new BadRequestException('Alias must be 3-30 chars, [a-z0-9_-]');
       }
       // Reserved routes
       const reserved = ['auth', 'docs', 'api', 'shorten', 'my-urls'];
-      if (reserved.includes(dto.alias.toLowerCase())) {
+      if (reserved.includes(normalizedAlias)) {
         throw new BadRequestException('Alias is a reserved route');
       }
-      const aliasExists = await this.prisma.shortUrl.findUnique({ where: { alias: dto.alias } });
+      const aliasExists = await this.prisma.shortUrl.findUnique({ where: { alias: normalizedAlias } });
       if (aliasExists) {
         throw new BadRequestException('Alias already in use');
       }
-      alias = dto.alias;
+      alias = normalizedAlias;
     }
 
     // Generate unique slug

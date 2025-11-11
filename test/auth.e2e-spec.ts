@@ -1,4 +1,5 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { truncateAllTables } from './utils/db-reset';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
@@ -14,6 +15,10 @@ describe('AuthController (e2e)', () => {
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
     await app.init();
+  });
+
+  beforeEach(async () => {
+    await truncateAllTables();
   });
 
   afterAll(async () => {

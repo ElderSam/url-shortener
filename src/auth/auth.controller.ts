@@ -1,4 +1,5 @@
-import { Controller, Post, Body, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Post, Body, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
+import { RateLimitGuard } from './guards/rate-limit.guard';
 import { TrimAndValidatePipe } from './pipes/trim-and-validate.pipe';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
@@ -14,6 +15,7 @@ export class AuthController {
     return this.authService.register(registerDto);
   }
   @Post('login')
+  @UseGuards(RateLimitGuard)
   async login(@Body(ValidationPipe) loginDto: LoginDto) {
     return this.authService.login(loginDto);
   }

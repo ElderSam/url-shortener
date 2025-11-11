@@ -43,28 +43,28 @@
 **Objetivo:** desenvolver a funcionalidade principal do sistema.
 
 - [x] Criar módulo `shorten` (ou `urls`)
-- [ ] Criar entidade `ShortUrl`:
-  - [ ] `id`
-  - [ ] `originalUrl`
-  - [ ] `slug`
-  - [ ] `alias` (opcional e único)
-  - [ ] `ownerId` (FK para `User`)
-  - [ ] `accessCount`
-  - [ ] `createdAt`, `updatedAt`, `deletedAt`
+ - [x] Criar entidade `ShortUrl`:
+  - [x] `id`
+  - [x] `originalUrl`
+  - [x] `slug`
+  - [x] `alias` (opcional e único)
+  - [x] `ownerId` (FK para `User`)
+  - [x] `accessCount`
+  - [x] `createdAt`, `updatedAt`, `deletedAt`
 
-- [ ] Criar serviço de geração de `slug` aleatório (6 caracteres base62)
+ - [x] Criar serviço de geração de `slug` aleatório (6 caracteres base62)
 
-- [ ] Implementar endpoints:
-  - [ ] `POST /shorten` → cria encurtamento (autenticado ou anônimo)
+ - [ ] Implementar endpoints:
+  - [x] `POST /shorten` → cria encurtamento (autenticado ou anônimo)
   - [ ] `GET /:short` → redireciona e incrementa `accessCount`
   - [ ] `GET /my-urls` → lista URLs do usuário autenticado
   - [ ] `PUT /my-urls/:id` → atualiza URL original
   - [ ] `DELETE /my-urls/:id` → soft delete (`deletedAt`)
 
-- [ ] Encurtamento - Adicionar validações:
+ - [x] Encurtamento - Adicionar validações:
   - [x] URL válida (http/https)
-  - [ ] Alias único e dentro da regex correta
-  - [ ] Slug não colidir
+  - [x] Alias único e dentro da regex correta
+  - [x] Slug não colidir
 - [ ] Testes unitários:
   - [ ] Criação de URL
   - [ ] Redirecionamento

@@ -5,6 +5,10 @@ A url shortener made with NestJS.
 ## Deploy Link
 https://url-shortener2-xzhs.onrender.com
 
+
+## Diagram - main functionalities
+![alt text](url-shortener-diagram.png)
+
 ## Project setup
 
 ### 1. Environment Variables

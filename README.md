@@ -2,6 +2,9 @@
 ## Description
 A url shortener made with NestJS.
 
+## Deploy Link
+https://url-shortener2-xzhs.onrender.com
+
 ## Project setup
 
 ### 1. Environment Variables
@@ -96,6 +99,25 @@ $ pnpm run test:cov
 ```
 
 
+## Scalability
+
+This application is designed to scale both horizontally and vertically:
+
+### Horizontal Scaling
+- **Stateless Design**: The application doesn't store session data in memory, making it safe to run multiple instances behind a load balancer.
+- **Database Connection Pool**: Prisma manages database connections efficiently, allowing multiple app instances to share the same PostgreSQL database.
+- **Docker Support**: Deploy multiple containers across different servers/regions for geographic distribution and high availability.
+
+### Vertical Scaling
+- **PostgreSQL Optimization**: Add indexes on frequently queried fields (slug, alias, ownerId) and enable query optimization.
+- **Caching Layer**: Implement Redis for frequently accessed short URLs to reduce database load.
+- **Database Read Replicas**: Use PostgreSQL read replicas for GET operations (redirects, listings) while writes go to the primary database.
+
+### Performance Considerations
+- **Base62 Slug Generation**: 6-character slugs provide 56+ billion unique combinations.
+- **Soft Delete Pattern**: Deleted URLs remain in database for potential recovery, using `deletedAt` filter in queries.
+- **Access Count**: Atomic increment operations prevent race conditions during concurrent redirects.
+
 ## Prettier & ESLint
 Explanation of the scripts:
 
@@ -103,23 +125,3 @@ Explanation of the scripts:
 ``lint:check``: checks lint without automatic fixes and fails if there are warnings  
 ``code:check``: runs both checks (useful for CI)  
 ``code:fix``: formats and automatically fixes issues  
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).

@@ -497,4 +497,72 @@ describe('ShortenService', () => {
       expect(result.shortUrl).toBe('http://localhost:3000/myalias');
     });
   });
+
+  describe('softDeleteUserUrl', () => {
+    it('should successfully soft delete the URL for owner', async () => {
+      const mockShortUrl = {
+        id: 'url-id-1',
+        ownerId: 'user-123',
+        originalUrl: 'https://example.com',
+        slug: 'abc123',
+        alias: null,
+        deletedAt: null
+      };
+
+      mockPrisma.shortUrl.findUnique.mockResolvedValue(mockShortUrl);
+      mockPrisma.shortUrl.update.mockResolvedValue({ ...mockShortUrl, deletedAt: new Date() });
+
+      await service.softDeleteUserUrl('url-id-1', 'user-123');
+
+      expect(mockPrisma.shortUrl.findUnique).toHaveBeenCalledWith({
+        where: { id: 'url-id-1' }
+      });
+      expect(mockPrisma.shortUrl.update).toHaveBeenCalledWith({
+        where: { id: 'url-id-1' },
+        data: { deletedAt: expect.any(Date) }
+      });
+    });
+
+    it('should throw NotFoundException if URL does not exist', async () => {
+      mockPrisma.shortUrl.findUnique.mockResolvedValue(null);
+
+      await expect(
+        service.softDeleteUserUrl('non-existent-id', 'user-123')
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('should throw NotFoundException if URL is already soft deleted', async () => {
+      const mockDeletedUrl = {
+        id: 'url-id-1',
+        ownerId: 'user-123',
+        deletedAt: new Date('2025-01-05'),
+        originalUrl: 'https://example.com',
+        slug: 'abc123',
+        alias: null
+      };
+
+      mockPrisma.shortUrl.findUnique.mockResolvedValue(mockDeletedUrl);
+
+      await expect(
+        service.softDeleteUserUrl('url-id-1', 'user-123')
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('should throw ForbiddenException if user does not own the URL', async () => {
+      const mockShortUrl = {
+        id: 'url-id-1',
+        ownerId: 'other-user',
+        originalUrl: 'https://example.com',
+        slug: 'abc123',
+        alias: null,
+        deletedAt: null
+      };
+
+      mockPrisma.shortUrl.findUnique.mockResolvedValue(mockShortUrl);
+
+      await expect(
+        service.softDeleteUserUrl('url-id-1', 'user-123')
+      ).rejects.toThrow(ForbiddenException);
+    });
+  });
 });

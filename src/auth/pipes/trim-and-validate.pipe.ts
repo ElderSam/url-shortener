@@ -1,7 +1,7 @@
 import { PipeTransform, Injectable, BadRequestException } from '@nestjs/common';
 import { RegisterDto } from '../dto/register.dto';
 
-const isTypeString = (val: unknown) => val == 'string';
+const isTypeString = (val: unknown) => typeof val == 'string';
 
 @Injectable()
 export class TrimAndValidatePipe implements PipeTransform {

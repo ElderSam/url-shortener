@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, ValidationPipe, UseGuards, ConflictException } from '@nestjs/common';
 import { RateLimitGuard } from './guards/rate-limit.guard';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
@@ -10,12 +10,24 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto);
+    try {
+      const result = await this.authService.register(registerDto);
+      return result;
+    } catch (err) {
+      if (err?.status === 409 && err?.message === 'Email already registered') {
+        throw new ConflictException('Email already registered');
+      }
+      throw err;
+    }
   }
 
   @Post('login')
   @UseGuards(RateLimitGuard)
   async login(@Body(ValidationPipe) loginDto: LoginDto) {
-    return this.authService.login(loginDto);
+    const result = await this.authService.login(loginDto);
+    return {
+      data: result,
+      message: 'Login successful',
+    };
   }
 }

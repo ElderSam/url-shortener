@@ -1,6 +1,6 @@
 
 ## Description
-A url shortener made with NestJS.
+A url shortener made with NestJS and PostgreSQL.
 
 ## Deploy Link
 https://url-shortener2-xzhs.onrender.com

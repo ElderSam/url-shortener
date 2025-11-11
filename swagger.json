@@ -69,6 +69,51 @@
         }
       }
     },
+    "/{short}": {
+      "get": {
+        "tags": ["Shorten"],
+        "summary": "Redirect to original URL and count access",
+        "parameters": [
+          {
+            "name": "short",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Short code (slug or alias) to redirect",
+            "example": "abc123"
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirect to original URL",
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "The original URL to redirect to",
+                "example": "https://example.com"
+              }
+            }
+          },
+          "404": {
+            "description": "Short URL not found or deleted",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "notFound": {
+                    "summary": "Short URL not found",
+                    "value": { "statusCode": 404, "message": "Short URL not found", "error": "Not Found" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/auth/register": {
       "post": {
         "tags": ["Auth"],

@@ -77,6 +77,28 @@
           "value": { "statusCode": 401, "message": "Invalid or expired token", "error": "Unauthorized" }
         }
       }
+    },
+    "redirect": {
+      "parameters": {
+        "default": {
+          "summary": "Redirect by slug",
+          "value": "abc123"
+        },
+        "byAlias": {
+          "summary": "Redirect by alias",
+          "value": "myalias"
+        }
+      },
+      "responses": {
+        "redirect": {
+          "summary": "Redirect to original URL (302)",
+          "headers": { "Location": "https://example.com" }
+        },
+        "notFound": {
+          "summary": "Short URL not found",
+          "value": { "statusCode": 404, "message": "Short URL not found", "error": "Not Found" }
+        }
+      }
     }
   }
 }

@@ -11,7 +11,7 @@
   - [x] Serviço do banco (PostgreSQL)
 - [x] Criar `.env` com variáveis:
   - [x] `DATABASE_URL`
-  - [ ] `JWT_SECRET`
+  - [x] `JWT_SECRET`
   - [x] `BASE_URL`
 - [x] Configurar Prisma
 - [x] Testar conexão com o banco e `docker-compose up`
@@ -21,21 +21,21 @@
 ## Etapa 2 — Autenticação e Usuários
 **Objetivo:** implementar login e cadastro JWT (base dos endpoints protegidos).
 
-- [ ] Criar módulos `auth` e `users`
-- [ ] Criar entidade `User`:
-  - [ ] `id`
-  - [ ] `email`
-  - [ ] `password`
-  - [ ] `createdAt`
-  - [ ] `updatedAt`
+- [x] Criar módulos `auth` e `users`
+- [x] Criar entidade `User`:
+  - [x] `id`
+  - [x] `email`
+  - [x] `password`
+  - [x] `createdAt`
+  - [x] `updatedAt`
 - [ ] Implementar endpoints:
-  - [ ] `POST /auth/signup` → cria usuário com senha hash (bcrypt)
-  - [ ] `POST /auth/login` → retorna JWT válido
+  - [x] `POST /auth/register` → cria usuário com senha hash (bcrypt)
+  - [x] `POST /auth/login` → retorna JWT válido
 - [ ] Criar `AuthGuard` que valida o token JWT
 - [ ] Testes unitários:
-  - [ ] Criação de usuário
-  - [ ] Login válido e inválido
-- [ ] Documentar endpoints no Swagger
+  - [x] Criação de usuário
+  - [x] Login válido e inválido
+- [x] Documentar endpoints no Swagger
 
 ---
 
